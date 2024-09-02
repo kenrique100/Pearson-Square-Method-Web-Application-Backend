@@ -1,16 +1,19 @@
 package com.api.feedFormulation.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 /**
- * Entity class representing an ingredient used in a feed formulation.
- * This class stores details about individual ingredients including their name,
- * crude protein content, and quantity. Each ingredient is associated with a specific
- * feed response.
+ * Entity class representing an ingredient in a feed formulation.
+ * This class is used to store details about a specific ingredient,
+ * including its name, crude protein content, and quantity.
  */
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
 public class Ingredient {
 
     /**
@@ -23,46 +26,30 @@ public class Ingredient {
 
     /**
      * Name of the ingredient.
-     * Represents the common name or type of the ingredient used in the feed formulation.
+     * Describes the type of ingredient used in the feed formulation.
      */
     private String name;
 
     /**
      * Crude protein content of the ingredient.
-     * Represents the percentage of crude protein in the ingredient.
+     * Represents the percentage of protein in the ingredient.
      */
     private double crudeProtein;
 
     /**
      * Quantity of the ingredient used in the feed formulation.
-     * Represents the amount of ingredient in kilograms.
+     * Represents the amount of the ingredient in kilograms.
      */
     private double quantity;
 
     /**
-     * Association with the FeedResponse entity.
-     * Indicates that each ingredient is linked to a specific feed response.
-     * The `feed_response_id` column in the database is used to establish this relationship.
-     * The `nullable = false` attribute ensures that an ingredient must be associated with a feed response.
+     * Many-to-one relationship with the FeedResponse entity.
+     * Each ingredient is associated with one FeedResponse.
      */
     @ManyToOne
-    @JoinColumn(name = "feed_response_id", nullable = false)
+    @JoinColumn(name = "feed_response_id")
     private FeedResponse feedResponse;
 
-    /**
-     * Constructor for creating new ingredients with specified name, crude protein, and quantity.
-     * This constructor does not set the associated FeedResponse
-     */
-    public Ingredient(String name, double crudeProtein, double quantity) {
-        this.name = name;
-        this.crudeProtein = crudeProtein;
-        this.quantity = quantity;
-    }
-
-    /**
-     * Default constructor.
-     * Required by JPA for entity instantiation.
-     */
+    //default constructor
     public Ingredient() {}
-
 }

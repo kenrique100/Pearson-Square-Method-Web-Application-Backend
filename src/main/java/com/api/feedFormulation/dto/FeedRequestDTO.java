@@ -19,17 +19,17 @@ public class FeedRequestDTO {
      * The quantity of the feed formulation requested.
      * Must be between 1 and 1000 kilograms (inclusive).
      */
-    @NotNull(message = "Quantity is required.") // Ensures that the quantity is not null
-    @Min(value = 1, message = "Quantity must be greater than zero.") // Minimum value constraint
-    @Max(value = 1000, message = "Quantity cannot exceed 1000 kg.") // Maximum value constraint
+    @NotNull(message = "Quantity is required.")
+    @Min(value = 1, message = "Quantity must be greater than zero.")
+    @Max(value = 1000, message = "Quantity cannot exceed 1000 kg.")
     private double quantity;
 
     /**
      * The target crude protein (CP) value for the feed formulation.
      * Must be a positive value greater than zero.
      */
-    @NotNull(message = "Target CP value is required.") // Ensures that the target CP value is not null
-    @Min(value = 0, message = "Target CP value must be greater than zero.") // Minimum value constraint
+    @NotNull(message = "Target CP value is required.")
+    @Min(value = 1, message = "Target CP value must be greater than zero.")
     private double targetCpValue;
 
 }

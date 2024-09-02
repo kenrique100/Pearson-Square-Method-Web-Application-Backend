@@ -53,16 +53,11 @@ public class FeedResponse {
 
     /**
      * List of ingredients used in the feed formulation.
-     * This is a one-to-many relationship where one feed response can have multiple ingredients.
-     *
-     * The ingredients are fetched eagerly and are deleted if the feed response is removed.
+     * This is a one-to-many relationship with the Ingredient entity.
      */
-    @OneToMany(mappedBy = "feedResponse", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "feedResponse", cascade = CascadeType.ALL)
     private List<Ingredient> ingredients = new ArrayList<>();
 
-    /**
-     * Default constructor.
-     * Required by JPA for entity instantiation.
-     */
+    // default constructor
     public FeedResponse() {}
 }
