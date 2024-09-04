@@ -46,7 +46,6 @@ public class FeedFormulationController {
         FeedResponseDTO response = feedFormulationService.getFeedResponseByFormulationIdAndDate(formulationId, date);
         return ResponseEntity.ok(response);
     }
-
     /**
      * Endpoint to retrieve all feed formulations.
      *

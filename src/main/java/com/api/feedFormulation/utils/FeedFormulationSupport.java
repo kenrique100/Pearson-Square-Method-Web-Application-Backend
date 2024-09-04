@@ -19,10 +19,11 @@ public class FeedFormulationSupport {
     /**
      * Validates the feed request to ensure it contains valid data.
      *
+     * @param formulationName  name of formulation
      * @param quantity      Quantity of the feed.
      * @param targetCpValue Target crude protein value.
      */
-    public void validateRequest(double quantity, double targetCpValue) {
+    public void validateRequest(String formulationName, double quantity, double targetCpValue) {
         if (quantity <= 0 || quantity > 1000) {
             throw new InvalidInputException("Quantity must be greater than zero and not exceed 1000 kg.");
         }
@@ -99,6 +100,7 @@ public class FeedFormulationSupport {
 
         return FeedResponseDTO.builder()
                 .formulationId(feedResponse.getFormulationId())
+                .formulationName(feedResponse.getFormulationName())
                 .date(feedResponse.getDate())
                 .quantity(feedResponse.getQuantity())
                 .targetCpValue(feedResponse.getTargetCpValue())

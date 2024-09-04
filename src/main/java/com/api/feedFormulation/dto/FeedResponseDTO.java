@@ -21,9 +21,16 @@ public class FeedResponseDTO {
     private String formulationId;
 
     /**
+     * Unique identifier for the feed formulation.
+     * This formulationName is generated and used to uniquely identify a specific formulation.
+     */
+    private String formulationName; // Add formulation name
+
+    /**
      * The date when the feed formulation was created.
      * Stored in a string format, typically as yyyy-MM-dd.
      */
+
     private String date;
 
     /**

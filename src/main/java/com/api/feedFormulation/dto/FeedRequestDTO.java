@@ -14,6 +14,12 @@ import lombok.Data;
 @Data
 @Builder
 public class FeedRequestDTO {
+    /**
+     * The name of the feed formulation requested
+     * The name is unique to each formulation
+     * */
+    @NotNull(message = "Formulation name is required.")
+    private String formulationName;
 
     /**
      * The quantity of the feed formulation requested.

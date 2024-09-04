@@ -34,6 +34,12 @@ public class FeedResponse {
     private String formulationId;
 
     /**
+     * Unique formulation identifier for the feed response.
+     * Used to identify and retrieve a specific formulation.
+     */
+    private String formulationName;
+
+    /**
      * Date of the feed formulation.
      * Represents the date when the formulation was created or last updated.
      */

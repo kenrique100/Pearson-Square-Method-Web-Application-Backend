@@ -8,5 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface FeedFormulationRepository extends JpaRepository<FeedResponse, Long> {
+
     Optional<FeedResponse> findByFormulationIdAndDate(String formulationId, String date);
+
+    boolean existsByFormulationName(String formulationName);
 }

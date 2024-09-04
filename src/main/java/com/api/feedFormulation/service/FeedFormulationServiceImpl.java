@@ -4,6 +4,7 @@ import com.api.feedFormulation.dto.FeedRequestDTO;
 import com.api.feedFormulation.dto.FeedResponseDTO;
 import com.api.feedFormulation.exception.InvalidInputException;
 import com.api.feedFormulation.model.FeedResponse;
+import com.api.feedFormulation.model.Ingredient;
 import com.api.feedFormulation.repository.FeedFormulationRepository;
 import com.api.feedFormulation.utils.FeedFormulationSupport;
 import jakarta.transaction.Transactional;
@@ -34,29 +35,39 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     public FeedResponseDTO calculateFeed(FeedRequestDTO request) {
         log.info("Starting feed formulation calculation.");
 
+        if (repository.existsByFormulationName(request.getFormulationName())) {
+            throw new InvalidInputException("Formulation name must be unique.");
+        }
+
         // Validate request values
-        support.validateRequest(request.getQuantity(), request.getTargetCpValue());
+        support.validateRequest(request.getFormulationName(), request.getQuantity(), request.getTargetCpValue());
+
 
         // Create ingredients based on quantity
-        var ingredients = support.createIngredients(request.getQuantity());
+        List<Ingredient> ingredients = support.createIngredients(request.getQuantity());
 
         // Build FeedResponse entity
-        var response = FeedResponse.builder()
-                .formulationId(support.generateGuid()) // Generate a unique ID for the formulation
-                .date(java.time.LocalDate.now().toString()) // Use current date
-                .quantity(request.getQuantity())
-                .targetCpValue(request.getTargetCpValue())
-                .ingredients(ingredients)
-                .build();
+        FeedResponse response = getFeedResponse(request, ingredients);
 
         // Associate ingredients with the feed response
         support.setFeedResponseToIngredients(response, ingredients);
 
         // Save the FeedResponse entity
-        var savedResponse = repository.save(response);
+        FeedResponse savedResponse = repository.save(response);
 
         log.info("Feed formulation calculation completed.");
         return support.mapToDTO(savedResponse);
+    }
+
+    private FeedResponse getFeedResponse(FeedRequestDTO request, List<Ingredient> ingredients) {
+        return FeedResponse.builder()
+                .formulationId(support.generateGuid())
+                .date(java.time.LocalDate.now().toString())
+                .formulationName(request.getFormulationName()) // Set formulation name
+                .quantity(request.getQuantity())
+                .targetCpValue(request.getTargetCpValue())
+                .ingredients(ingredients)
+                .build();
     }
 
     /**
@@ -70,7 +81,7 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     @Override
     public FeedResponseDTO getFeedResponseByFormulationIdAndDate(String formulationId, String date) {
         log.info("Fetching feed formulation with ID: {} and date: {}", formulationId, date);
-        var response = repository.findByFormulationIdAndDate(formulationId, date)
+        FeedResponse response = repository.findByFormulationIdAndDate(formulationId, date)
                 .orElseThrow(() -> new InvalidInputException("Feed formulation not found"));
         return support.mapToDTO(response);
     }
@@ -100,10 +111,11 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     @Override
     public FeedResponseDTO updateFeedResponse(String formulationId, String date, FeedRequestDTO request) {
         log.info("Updating feed formulation with ID: {} and date: {}", formulationId, date);
-        var existingResponse = repository.findByFormulationIdAndDate(formulationId, date)
+        FeedResponse existingResponse = repository.findByFormulationIdAndDate(formulationId, date)
                 .orElseThrow(() -> new InvalidInputException("Feed formulation not found"));
 
         // Update existing response fields
+        existingResponse.setFormulationName(request.getFormulationName());
         existingResponse.setQuantity(request.getQuantity());
         existingResponse.setTargetCpValue(request.getTargetCpValue());
         return support.mapToDTO(repository.save(existingResponse));
@@ -119,7 +131,7 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     @Override
     public void deleteFeedResponse(String formulationId, String date) {
         log.info("Deleting feed formulation with ID: {} and date: {}", formulationId, date);
-        var response = repository.findByFormulationIdAndDate(formulationId, date)
+        FeedResponse response = repository.findByFormulationIdAndDate(formulationId, date)
                 .orElseThrow(() -> new InvalidInputException("Feed formulation not found"));
         repository.delete(response);
     }
