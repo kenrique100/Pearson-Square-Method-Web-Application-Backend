@@ -1,4 +1,4 @@
-package com.api.feedFormulation.config;
+package com.feedformulation.config;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
