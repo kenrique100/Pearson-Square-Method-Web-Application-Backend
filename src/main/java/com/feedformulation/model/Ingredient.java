@@ -1,4 +1,4 @@
-package com.api.feedFormulation.model;
+package com.feedformulation.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
