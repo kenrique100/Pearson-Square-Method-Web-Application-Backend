@@ -1,4 +1,4 @@
-package com.api.feedFormulation.utils;
+package com.feedformulation.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
