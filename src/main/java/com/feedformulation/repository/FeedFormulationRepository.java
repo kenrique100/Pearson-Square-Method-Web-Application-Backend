@@ -1,6 +1,6 @@
-package com.api.feedFormulation.repository;
+package com.feedformulation.repository;
 
-import com.api.feedFormulation.model.FeedResponse;
+import com.feedformulation.model.FeedResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
