@@ -37,7 +37,7 @@ public class FeedFormulation {
 
     // Set FetchType to EAGER so ingredients are fetched when FeedFormulation is queried
     @Builder.Default
-    @OneToMany(mappedBy = "feedFormulation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "feedFormulation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference // Prevents cyclic reference issue
     private List<Ingredient2> ingredient2s = new ArrayList<>(); // Default empty list for ingredients
 
