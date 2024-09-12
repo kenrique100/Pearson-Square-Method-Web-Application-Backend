@@ -41,9 +41,4 @@ public class FeedFormulation {
     @JsonManagedReference // Prevents cyclic reference issue
     private List<Ingredient2> ingredient2s = new ArrayList<>(); // Default empty list for ingredients
 
-    // Method to add ingredient to formulation and set the relationship
-    public void addIngredient(Ingredient2 ingredient2) {
-        ingredient2.setFeedFormulation(this);
-        this.ingredient2s.add(ingredient2);
-    }
 }
