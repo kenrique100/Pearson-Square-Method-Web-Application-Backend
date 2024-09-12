@@ -28,7 +28,7 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
         FeedFormulation formulation = FeedFormulation.builder()
                 .formulationId(generateGuid())
                 .formulationName(request.getFormulationName())
-                .date(LocalDate.now())
+                .date(LocalDate.now()) // Set current date during creation
                 .totalQuantityKg(feedFormulationSupport2.calculateTotalQuantity(request))
                 .targetCpValue(feedFormulationSupport2.calculateTargetCpValue(request))
                 .build();
@@ -41,9 +41,10 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
     }
 
     @Override
-    public FeedFormulation getFeedFormulationById(String id) {
-        return feedFormulationRepository2.findById(id)
-                .orElseThrow(() -> new FeedFormulationNotFoundException("Feed formulation not found for ID: " + id));
+    public FeedFormulation getFeedFormulationByIdAndDate(String id, String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        return feedFormulationRepository2.findByFormulationIdAndDate(id, localDate)
+                .orElseThrow(() -> new FeedFormulationNotFoundException("Feed formulation not found for ID: " + id + " and Date: " + date));
     }
 
     @Override
@@ -55,8 +56,10 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
     }
 
     @Override
-    public FeedFormulation updateFeedFormulation(String id, FeedFormulationRequest request) {
-        FeedFormulation existing = getFeedFormulationById(id);
+    public FeedFormulation updateFeedFormulationByIdAndDate(String id, String date, FeedFormulationRequest request) {
+        LocalDate localDate = LocalDate.parse(date);
+        FeedFormulation existing = feedFormulationRepository2.findByFormulationIdAndDate(id, localDate)
+                .orElseThrow(() -> new FeedFormulationNotFoundException("Feed formulation not found for ID: " + id + " and Date: " + date));
 
         // Update simple fields
         existing.setFormulationName(request.getFormulationName());
@@ -68,8 +71,6 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
 
         // Clear the existing collection to avoid orphaning issues
         existing.getIngredient2s().clear();
-
-        // Add all new ingredients to the existing collection
         existing.getIngredient2s().addAll(newIngredient2s);
 
         // Save the updated feed formulation
@@ -77,8 +78,12 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
     }
 
     @Override
-    public void deleteFeedFormulation(String id) {
-        feedFormulationRepository2.deleteById(id);
+    public void deleteFeedFormulationByIdAndDate(String id, String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        FeedFormulation existing = feedFormulationRepository2.findByFormulationIdAndDate(id, localDate)
+                .orElseThrow(() -> new FeedFormulationNotFoundException("Feed formulation not found for ID: " + id + " and Date: " + date));
+
+        feedFormulationRepository2.delete(existing);
     }
 
     private FeedFormulationResponse mapToResponse(FeedFormulation formulation) {
@@ -90,14 +95,15 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
                 .targetCpValue(formulation.getTargetCpValue())
                 .ingredients(formulation.getIngredient2s().stream()
                         .map(ingredient2 -> Ingredient2DTO.builder()
-                                .id(ingredient2.getId())
-                                .name(ingredient2.getName())
+                                .name(ingredient2.getName()) // Map only the required fields
                                 .crudeProtein(ingredient2.getCrudeProtein())
                                 .quantityKg(ingredient2.getQuantityKg())
                                 .build())
                         .collect(Collectors.toList()))
                 .build();
     }
+
+
 
     private String generateGuid() {
         return UUID.randomUUID().toString().substring(0, 5);
