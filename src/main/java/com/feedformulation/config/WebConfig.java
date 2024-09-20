@@ -16,14 +16,14 @@ public class WebConfig {
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 // Configure CORS for /api/feed-formulations endpoints
                 registry.addMapping("/api/feed-formulations/**")
-                        .allowedOrigins("http://localhost:3000") // Frontend origin
+                        .allowedOrigins("https://pearson-square-method-web-application-frontend.vercel.app/") // Frontend origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
                         .allowedHeaders("*") // Allowed headers
                         .allowCredentials(true); // Allow credentials (e.g., cookies)
 
                 // Configure CORS for /v1/api/feed-formulation endpoints
                 registry.addMapping("/api/feed-formulation/**")
-                        .allowedOrigins("http://localhost:3000") // Frontend origin
+                        .allowedOrigins("https://pearson-square-method-web-application-frontend.vercel.app/") // Frontend origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
                         .allowedHeaders("*") // Allowed headers
                         .allowCredentials(true); // Allow credentials (e.g., cookies)
