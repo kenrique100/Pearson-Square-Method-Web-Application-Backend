@@ -14,7 +14,7 @@ public interface FeedFormulationService2 {
      * @param request The request containing the data needed to create the feed formulation
      * @return The newly created FeedFormulation entity
      */
-    FeedFormulation createFeedFormulation(FeedFormulationRequest request);
+    FeedFormulation createCustomFormulation(FeedFormulationRequest request);
 
     /**
      * Retrieves a feed formulation by its unique ID and date.
@@ -23,14 +23,14 @@ public interface FeedFormulationService2 {
      * @param date The date of the formulation.
      * @return The FeedFormulation entity corresponding to the provided ID and date
      */
-    FeedFormulation getFeedFormulationByIdAndDate(String id, String date);
+    FeedFormulation getCustomFormulationByIdAndDate(String id, String date);
 
     /**
      * Retrieves a list of all feed formulations.
      *
      * @return A list of all FeedFormulationResponse entities
      */
-    List<FeedFormulationResponse> getAllFeedFormulations();
+    List<FeedFormulationResponse> getCustomFormulations();
 
     /**
      * Updates an existing feed formulation with the provided data, identified by ID and date.
@@ -40,7 +40,7 @@ public interface FeedFormulationService2 {
      * @param request The request containing the updated data for the feed formulation
      * @return The updated FeedFormulation entity
      */
-    FeedFormulation updateFeedFormulationByIdAndDate(String id, String date, FeedFormulationRequest request);
+    FeedFormulation updateCustomFeedFormulationByIdAndDate(String id, String date, FeedFormulationRequest request);
 
     /**
      * Deletes a feed formulation by its unique ID and date.
@@ -48,6 +48,6 @@ public interface FeedFormulationService2 {
      * @param id   The unique identifier of the feed formulation to be deleted
      * @param date The date of the formulation to be deleted
      */
-    void deleteFeedFormulationByIdAndDate(String id, String date);
+    void deleteCustomFeedFormulationByIdAndDate(String id, String date);
 
 }

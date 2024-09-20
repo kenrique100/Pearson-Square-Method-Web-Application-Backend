@@ -19,13 +19,12 @@ public class FeedFormulationSupport {
     /**
      * Validates the feed request to ensure it contains valid data.
      *
-     * @param formulationName  name of formulation
      * @param quantity      Quantity of the feed.
      * @param targetCpValue Target crude protein value.
      */
-    public void validateRequest(String formulationName, double quantity, double targetCpValue) {
-        if (quantity <= 0 || quantity > 1000) {
-            throw new InvalidInputException("Quantity must be greater than zero and not exceed 1000 kg.");
+    public void validateRequest( double quantity, double targetCpValue) {
+        if (quantity <= 0 || quantity > 5000) {
+            throw new InvalidInputException("Quantity must be greater than zero and not exceed 5000 kg.");
         }
         if (targetCpValue <= 0) {
             throw new InvalidInputException("Target CP value must be greater than zero.");
@@ -73,8 +72,6 @@ public class FeedFormulationSupport {
                         .quantity(quantity * Constants.CALC_0005_VALUE).build(),
                 Ingredient.builder().name("Premix").crudeProtein(Constants.CRUDE_00_VALUE)
                         .quantity(quantity * Constants.CALC_001_VALUE).build(),
-                Ingredient.builder().name("Concentrate").crudeProtein(Constants.CRUDE_CON_VALUE)
-                        .quantity(quantity * Constants.CALC_005_VALUE).build(),
                 Ingredient.builder().name("Palm Oil").crudeProtein(Constants.CRUDE_00_VALUE)
                         .quantity(quantity * Constants.CALC_002_VALUE).build(),
                 Ingredient.builder().name("Anti-toxin").crudeProtein(Constants.CRUDE_00_VALUE)

@@ -1,7 +1,6 @@
 package com.feedformulation.utils;
 
 import com.feedformulation.dto.FeedFormulationRequest;
-import com.feedformulation.dto.Ingredient2DTO;
 import com.feedformulation.model.FeedFormulation;
 import com.feedformulation.model.Ingredient2;
 import org.springframework.stereotype.Component;
@@ -12,70 +11,39 @@ import java.util.List;
 @Component
 public class FeedFormulationSupport2 {
 
-    public double calculateTargetCpValue(FeedFormulationRequest request) {
-        double totalQuantity = calculateTotalQuantity(request);
-
-        double totalCrudeProtein = request.getIngredients().getProteins().stream()
+    public double calculateTotalCpValue(List<Ingredient2> ingredients, double totalQuantity) {
+        double totalCrudeProtein = ingredients.stream()
                 .mapToDouble(ingredient -> ingredient.getQuantityKg() * getCrudeProteinByIngredient(ingredient.getName()))
                 .sum();
-
-        totalCrudeProtein += request.getIngredients().getCarbohydrates().stream()
-                .mapToDouble(ingredient -> ingredient.getQuantityKg() * getCrudeProteinByIngredient(ingredient.getName()))
-                .sum();
-
-        return round(totalCrudeProtein / totalQuantity);
+        return totalQuantity > 0 ? round(totalCrudeProtein / totalQuantity) : 0.0;
     }
 
     public List<Ingredient2> createIngredients(FeedFormulationRequest request, FeedFormulation formulation) {
-        List<Ingredient2> proteins = request.getIngredients().getProteins().stream()
+        List<Ingredient2> proteins = request.getProteins().stream()
                 .map(ingredient -> Ingredient2.builder()
                         .name(ingredient.getName())
                         .crudeProtein(getCrudeProteinByIngredient(ingredient.getName()))
                         .quantityKg(ingredient.getQuantityKg())
-                        .feedFormulation(formulation) // Associate with formulation
+                        .feedFormulation(formulation)
                         .build())
                 .toList();
 
-        List<Ingredient2> carbohydrates = request.getIngredients().getCarbohydrates().stream()
+        List<Ingredient2> carbohydrates = request.getCarbohydrates().stream()
                 .map(ingredient -> Ingredient2.builder()
                         .name(ingredient.getName())
                         .crudeProtein(getCrudeProteinByIngredient(ingredient.getName()))
                         .quantityKg(ingredient.getQuantityKg())
-                        .feedFormulation(formulation) // Associate with formulation
+                        .feedFormulation(formulation)
                         .build())
                 .toList();
 
-        List<Ingredient2> allIngredient2s = new ArrayList<>(proteins);
-        allIngredient2s.addAll(carbohydrates);
+        List<Ingredient2> mainIngredients = new ArrayList<>(proteins);
+        mainIngredients.addAll(carbohydrates);
 
-        allIngredient2s.addAll(createOtherIngredients(calculateTotalQuantity(request), formulation));
-
-        return allIngredient2s;
+        return mainIngredients;
     }
 
-    public double calculateTotalQuantity(FeedFormulationRequest request) {
-        double proteinQuantity = request.getIngredients().getProteins().stream()
-                .mapToDouble(Ingredient2DTO::getQuantityKg).sum();
-
-        double carbohydrateQuantity = request.getIngredients().getCarbohydrates().stream()
-                .mapToDouble(Ingredient2DTO::getQuantityKg).sum();
-
-        return proteinQuantity + carbohydrateQuantity;
-    }
-
-    private double getCrudeProteinByIngredient(String ingredientName) {
-        return switch (ingredientName.toLowerCase()) {
-            case "soya beans" -> Constants.CRUDE_SOYA_VALUE;
-            case "groundnuts" -> Constants.CRUDE_NUTS_VALUE;
-            case "blood meal" -> Constants.CRUDE_BLOOD_VALUE;
-            case "fish meal" -> Constants.CRUDE_FISH_VALUE;
-            case "maize" -> Constants.CRUDE_MAIZE_VALUE;
-            case "cassava" -> Constants.CRUDE_CAS_VALUE;
-            default -> Constants.CRUDE_00_VALUE;
-        };
-    }
-
-    private List<Ingredient2> createOtherIngredients(double totalQuantity, FeedFormulation formulation) {
+    public List<Ingredient2> createOtherIngredients(double totalQuantity, FeedFormulation formulation) {
         return List.of(
                 Ingredient2.builder().name("DiPhosphate Calcium").crudeProtein(Constants.CRUDE_00_VALUE)
                         .quantityKg(totalQuantity * Constants.CALC_002_VALUE).feedFormulation(formulation).build(),
@@ -96,8 +64,47 @@ public class FeedFormulationSupport2 {
         );
     }
 
+    public double calculateTotalQuantity(List<FeedFormulationRequest.IngredientRequest> ingredients) {
+        return ingredients.stream()
+                .mapToDouble(FeedFormulationRequest.IngredientRequest::getQuantityKg)
+                .sum();
+    }
+
+    public double calculateTargetCpValue(FeedFormulationRequest request) {
+        double totalProteinsQuantity = calculateTotalQuantity(request.getProteins());
+        double totalCarbohydratesQuantity = calculateTotalQuantity(request.getCarbohydrates());
+        double totalQuantity = totalProteinsQuantity + totalCarbohydratesQuantity;
+
+        double totalCrudeProtein = request.getProteins().stream()
+                .mapToDouble(ingredient -> ingredient.getQuantityKg() * getCrudeProteinByIngredient(ingredient.getName()))
+                .sum();
+        totalCrudeProtein += request.getCarbohydrates().stream()
+                .mapToDouble(ingredient -> ingredient.getQuantityKg() * getCrudeProteinByIngredient(ingredient.getName()))
+                .sum();
+
+        return totalQuantity > 0 ? round(totalCrudeProtein / totalQuantity) : 0.0;
+    }
+
+    private double getCrudeProteinByIngredient(String ingredientName) {
+        return switch (ingredientName.toLowerCase()) {
+            case "soya beans" -> Constants.CRUDE_SOYA_VALUE;
+            case "groundnuts" -> Constants.CRUDE_NUTS_VALUE;
+            case "blood meal" -> Constants.CRUDE_BLOOD_VALUE;
+            case "fish meal" -> Constants.CRUDE_FISH_VALUE;
+            case "maize" -> Constants.CRUDE_MAIZE_VALUE;
+            case "cassava" -> Constants.CRUDE_CAS_VALUE;
+            default -> Constants.CRUDE_00_VALUE;
+        };
+    }
+
     private double round(double value) {
         long factor = (long) Math.pow(10, 1);
         return (double) Math.round(value * factor) / factor;
+    }
+
+    public double calculateTotalQuantityFromRequest(FeedFormulationRequest request) {
+        double totalProteinsQuantity = calculateTotalQuantity(request.getProteins());
+        double totalCarbohydratesQuantity = calculateTotalQuantity(request.getCarbohydrates());
+        return totalProteinsQuantity + totalCarbohydratesQuantity;
     }
 }

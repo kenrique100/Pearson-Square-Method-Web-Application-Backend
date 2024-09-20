@@ -2,6 +2,7 @@ package com.feedformulation.service;
 
 import com.feedformulation.dto.FeedRequestDTO;
 import com.feedformulation.dto.FeedResponseDTO;
+import com.feedformulation.exception.FeedFormulationNotFoundException;
 import com.feedformulation.exception.InvalidInputException;
 import com.feedformulation.model.FeedResponse;
 import com.feedformulation.model.Ingredient;
@@ -12,9 +13,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the FeedFormulationService interface.
+ * Handles the business logic for creating, retrieving, updating, and deleting feed formulations.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,115 +30,129 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     private final FeedFormulationSupport support;
 
     /**
-     * Calculates feed formulation based on the given request.
-     * Validates the request, generates ingredients, and saves the feed response.
+     * Creates a new feed formulation based on the request data.
      *
-     * @param request The request containing quantity and target crude protein value.
-     * @return The saved feed response as a DTO.
+     * @param request The FeedRequestDTO containing the details for the formulation.
+     * @return The created FeedResponseDTO with the formulation details.
      */
     @Transactional
     @Override
-    public FeedResponseDTO calculateFeed(FeedRequestDTO request) {
+    public FeedResponseDTO createFeedFormulation(FeedRequestDTO request) {
         log.info("Starting feed formulation calculation.");
 
+        // Check if the formulation name is unique
         if (repository.existsByFormulationName(request.getFormulationName())) {
             throw new InvalidInputException("Formulation name must be unique.");
         }
 
-        // Validate request values
-        support.validateRequest(request.getFormulationName(), request.getQuantity(), request.getTargetCpValue());
+        // Validate the input quantity and target CP value
+        support.validateRequest(request.getQuantity(), request.getTargetCpValue());
 
-
-        // Create ingredients based on quantity
+        // Create the list of ingredients based on the quantity
         List<Ingredient> ingredients = support.createIngredients(request.getQuantity());
 
-        // Build FeedResponse entity
+        // Build the FeedResponse object with the formulation details
         FeedResponse response = getFeedResponse(request, ingredients);
-
-        // Associate ingredients with the feed response
         support.setFeedResponseToIngredients(response, ingredients);
 
-        // Save the FeedResponse entity
+        // Save the feed formulation and return the response DTO
         FeedResponse savedResponse = repository.save(response);
-
         log.info("Feed formulation calculation completed.");
         return support.mapToDTO(savedResponse);
     }
 
+    /**
+     * Helper method to create a FeedResponse object.
+     *
+     * @param request The FeedRequestDTO containing the formulation details.
+     * @param ingredients The list of ingredients to be included in the formulation.
+     * @return A FeedResponse object with the formulation details.
+     */
     private FeedResponse getFeedResponse(FeedRequestDTO request, List<Ingredient> ingredients) {
+        double totalQuantityKg = ingredients.stream().mapToDouble(Ingredient::getQuantity).sum(); // Calculate total quantity
         return FeedResponse.builder()
                 .formulationId(support.generateGuid())
-                .date(java.time.LocalDate.now().toString())
-                .formulationName(request.getFormulationName()) // Set formulation name
-                .quantity(request.getQuantity())
+                .date(LocalDate.now().toString())
+                .formulationName(request.getFormulationName())
+                .quantity(totalQuantityKg) // Set total quantity here
                 .targetCpValue(request.getTargetCpValue())
                 .ingredients(ingredients)
                 .build();
     }
 
     /**
-     * Retrieves a feed response by formulation ID and date.
+     * Retrieves a feed formulation by its formulationId and date.
      *
-     * @param formulationId The unique ID of the feed formulation.
-     * @param date The date of the feed formulation.
-     * @return The feed response as a DTO.
-     * @throws InvalidInputException if no feed response is found.
+     * @param formulationId The ID of the formulation.
+     * @param date The date of the formulation.
+     * @return The retrieved FeedResponseDTO with the formulation details.
      */
     @Override
-    public FeedResponseDTO getFeedResponseByFormulationIdAndDate(String formulationId, String date) {
-        log.info("Fetching feed formulation with ID: {} and date: {}", formulationId, date);
-        FeedResponse response = repository.findByFormulationIdAndDate(formulationId, date)
-                .orElseThrow(() -> new InvalidInputException("Feed formulation not found"));
-        return support.mapToDTO(response);
+    public FeedResponseDTO getFormulationByIdAndDate(String formulationId, String date) {
+        LocalDate localDate = LocalDate.parse(date);
+
+        // Find the formulation by its ID and date, throw an exception if not found
+        return repository.findByFormulationIdAndDate(formulationId, String.valueOf(localDate))
+                .map(support::mapToDTO)
+                .orElseThrow(() -> new FeedFormulationNotFoundException(
+                        "Feed formulation not found for ID: " + formulationId + " and Date: " + date));
     }
 
     /**
      * Retrieves all feed formulations.
      *
-     * @return A list of all feed formulations as DTOs.
+     * @return A list of all FeedResponseDTOs.
      */
     @Override
-    public List<FeedResponseDTO> getAllFeedFormulations() {
+    public List<FeedResponseDTO> getFormulations() {
         log.info("Fetching all feed formulations.");
+
+        // Fetch all formulations from the repository and map them to DTOs
         return repository.findAll().stream()
                 .map(support::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     /**
-     * Updates an existing feed response based on formulation ID and date.
+     * Updates an existing feed formulation by its formulationId and date.
      *
-     * @param formulationId The unique ID of the feed formulation.
-     * @param date The date of the feed formulation.
-     * @param request The request containing updated quantity and target crude protein value.
-     * @return The updated feed response as a DTO.
-     * @throws InvalidInputException if the feed response to update is not found.
+     * @param formulationId The ID of the formulation to be updated.
+     * @param date The date of the formulation to be updated.
+     * @param request The FeedRequestDTO containing the updated details for the formulation.
+     * @return The updated FeedResponseDTO with the new formulation details.
      */
     @Override
-    public FeedResponseDTO updateFeedResponse(String formulationId, String date, FeedRequestDTO request) {
+    public FeedResponseDTO updateFeedFormulationByIdAndDate(String formulationId, String date, FeedRequestDTO request) {
         log.info("Updating feed formulation with ID: {} and date: {}", formulationId, date);
-        FeedResponse existingResponse = repository.findByFormulationIdAndDate(formulationId, date)
+
+        // Find the existing formulation by its ID and date, throw an exception if not found
+        FeedResponse existingResponse = repository.findByFormulationIdAndDate(formulationId, String.valueOf(LocalDate.parse(date)))
                 .orElseThrow(() -> new InvalidInputException("Feed formulation not found"));
 
-        // Update existing response fields
+        // Update the formulation details
         existingResponse.setFormulationName(request.getFormulationName());
         existingResponse.setQuantity(request.getQuantity());
         existingResponse.setTargetCpValue(request.getTargetCpValue());
+
+        // Save and return the updated formulation as a DTO
         return support.mapToDTO(repository.save(existingResponse));
     }
 
     /**
-     * Deletes a feed response based on formulation ID and date.
+     * Deletes a feed formulation by its formulationId and date.
      *
-     * @param formulationId The unique ID of the feed formulation.
-     * @param date The date of the feed formulation.
-     * @throws InvalidInputException if the feed response to delete is not found.
+     * @param formulationId The ID of the formulation to be deleted.
+     * @param date The date of the formulation to be deleted.
      */
     @Override
-    public void deleteFeedResponse(String formulationId, String date) {
+    public void deleteFeedFormulationByIdAndDate(String formulationId, String date) {
         log.info("Deleting feed formulation with ID: {} and date: {}", formulationId, date);
-        FeedResponse response = repository.findByFormulationIdAndDate(formulationId, date)
+
+        // Find the formulation by its ID and date, throw an exception if not found
+        FeedResponse response = repository.findByFormulationIdAndDate(formulationId, String.valueOf(LocalDate.parse(date)))
                 .orElseThrow(() -> new InvalidInputException("Feed formulation not found"));
+
+        // Delete the found formulation
         repository.delete(response);
     }
 }

@@ -1,5 +1,6 @@
 package com.feedformulation.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -9,22 +10,19 @@ import java.util.List;
 public class FeedFormulationRequest {
 
     @NotNull(message = "Formulation name is required.")
-    private String formulationName; // Name of the custom feed formulation
+    private String formulationName;
 
-    @NotNull
-    private IngredientsRequest ingredients; // Contains a list of ingredient categories (proteins, carbohydrates)
+    @NotEmpty(message = "At least one protein ingredient is required.")
+    private List<IngredientRequest> proteins;  // List for protein ingredients
 
-    /**
-     * Nested static class to represent the structure of the ingredients in a feed formulation.
-     * Each category (proteins, carbohydrates) will contain a list of CustomIngredientDTO objects.
-     */
-    @Data // Lombok annotation to generate getters, setters, toString, equals, and hashCode methods for the nested class
-    public static class IngredientsRequest {
+    @NotEmpty(message = "At least one carbohydrate ingredient is required.")
+    private List<IngredientRequest> carbohydrates;  // List for carbohydrate ingredients
 
+    @Data
+    public static class IngredientRequest {
         @NotNull
-        private List<Ingredient2DTO> proteins; // List of protein ingredients in the formulation
-
+        private String name;
         @NotNull
-        private List<Ingredient2DTO> carbohydrates; // List of carbohydrate ingredients in the formulation
+        private double quantityKg;
     }
 }

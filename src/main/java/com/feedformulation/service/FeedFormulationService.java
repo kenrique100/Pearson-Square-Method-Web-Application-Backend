@@ -7,52 +7,50 @@ import java.util.List;
 
 /**
  * Service interface for managing feed formulations.
- * This interface defines the contract for feed formulation-related operations.
+ * This interface defines the operations related to creating, retrieving, updating,
+ * and deleting feed formulations, as well as fetching all formulations.
  */
 public interface FeedFormulationService {
 
     /**
-     * Calculate and create a feed formulation based on the provided request details.
+     * Creates a new feed formulation.
      *
      * @param request The FeedRequestDTO containing the details for the formulation.
      * @return The created FeedResponseDTO with the formulation details.
      */
-    FeedResponseDTO calculateFeed(FeedRequestDTO request);
+    FeedResponseDTO createFeedFormulation(FeedRequestDTO request);
 
     /**
-     * Retrieve a feed formulation by its formulation ID and date.
+     * Retrieves a feed formulation by its formulationId and date.
      *
      * @param formulationId The ID of the formulation.
      * @param date The date of the formulation.
      * @return The retrieved FeedResponseDTO with the formulation details.
      */
-    FeedResponseDTO getFeedResponseByFormulationIdAndDate(String formulationId, String date);
+    FeedResponseDTO getFormulationByIdAndDate(String formulationId, String date);
 
     /**
-     * Retrieve all feed formulations.
+     * Retrieves all feed formulations.
      *
      * @return A list of all FeedResponseDTOs.
      */
-    List<FeedResponseDTO> getAllFeedFormulations();
+    List<FeedResponseDTO> getFormulations();
 
     /**
-     * Update an existing feed formulation with new details.
+     * Updates an existing feed formulation by its formulationId and date.
      *
      * @param formulationId The ID of the formulation to be updated.
      * @param date The date of the formulation to be updated.
      * @param request The FeedRequestDTO containing the new details for the formulation.
      * @return The updated FeedResponseDTO with the new formulation details.
      */
-    FeedResponseDTO updateFeedResponse(String formulationId, String date, FeedRequestDTO request);
+    FeedResponseDTO updateFeedFormulationByIdAndDate(String formulationId, String date, FeedRequestDTO request);
 
     /**
-     * Delete a feed formulation by its formulation ID and date.
+     * Deletes a feed formulation by its formulationId and date.
      *
      * @param formulationId The ID of the formulation to be deleted.
      * @param date The date of the formulation to be deleted.
      */
-    void deleteFeedResponse(String formulationId, String date);
-
-
-
+    void deleteFeedFormulationByIdAndDate(String formulationId, String date);
 }

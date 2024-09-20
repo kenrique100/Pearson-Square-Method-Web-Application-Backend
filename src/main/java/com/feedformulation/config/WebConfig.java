@@ -14,11 +14,19 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NotNull CorsRegistry registry) {
-                registry.addMapping("/api/**") // Adjust this to match your API endpoint patterns
-                        .allowedOrigins("http://localhost:3000") // Frontend(s) origin
+                // Configure CORS for /api/feed-formulations endpoints
+                registry.addMapping("/api/feed-formulations/**")
+                        .allowedOrigins("http://localhost:3000") // Frontend origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
                         .allowedHeaders("*") // Allowed headers
-                        .allowCredentials(true); // Allow cookies
+                        .allowCredentials(true); // Allow credentials (e.g., cookies)
+
+                // Configure CORS for /v1/api/feed-formulation endpoints
+                registry.addMapping("/api/feed-formulation/**")
+                        .allowedOrigins("http://localhost:3000") // Frontend origin
+                        .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
+                        .allowedHeaders("*") // Allowed headers
+                        .allowCredentials(true); // Allow credentials (e.g., cookies)
             }
         };
     }

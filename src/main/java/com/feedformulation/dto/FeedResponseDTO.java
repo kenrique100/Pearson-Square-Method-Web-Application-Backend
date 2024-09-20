@@ -2,7 +2,6 @@ package com.feedformulation.dto;
 
 import lombok.Builder;
 import lombok.Data;
-
 import java.util.List;
 
 /**
@@ -13,29 +12,25 @@ import java.util.List;
 @Data
 @Builder
 public class FeedResponseDTO {
-
     /**
      * Unique identifier for the feed formulation.
-     * This ID is generated and used to uniquely identify a specific formulation.
      */
     private String formulationId;
 
     /**
-     * Unique identifier for the feed formulation.
-     * This formulationName is generated and used to uniquely identify a specific formulation.
+     * The name of the feed formulation.
+     * This name is descriptive and not used as a unique identifier.
      */
-    private String formulationName; // Add formulation name
+    private String formulationName;
 
     /**
      * The date when the feed formulation was created.
-     * Stored in a string format, typically as yyyy-MM-dd.
+     * Stored in string format, typically as yyyy-MM-dd.
      */
-
     private String date;
 
     /**
-     * The total quantity of feed formulation.
-     * Represents the amount of feed in kilograms.
+     * The total quantity of feed formulation in kilograms.
      */
     private double quantity;
 

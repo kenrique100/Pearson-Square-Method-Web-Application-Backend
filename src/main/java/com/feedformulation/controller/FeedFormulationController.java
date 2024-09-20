@@ -16,7 +16,7 @@ import java.util.List;
  * and returns appropriate HTTP responses.
  */
 @RestController
-@RequestMapping("/api/v1/feed-formulation")
+@RequestMapping("/api/feed-formulation")
 @RequiredArgsConstructor
 public class FeedFormulationController {
 
@@ -29,31 +29,33 @@ public class FeedFormulationController {
      * @return The created FeedResponseDTO with the formulation details.
      */
     @PostMapping
-    public ResponseEntity<FeedResponseDTO> createFormulation(@Valid @RequestBody FeedRequestDTO request) {
-        FeedResponseDTO response = feedFormulationService.calculateFeed(request);
+    public ResponseEntity<FeedResponseDTO> createFeedFormulation(@Valid @RequestBody FeedRequestDTO request) {
+        FeedResponseDTO response = feedFormulationService.createFeedFormulation(request);
         return ResponseEntity.ok(response);
     }
 
     /**
-     * Endpoint to retrieve a feed formulation by its formulation ID and date.
+     * Endpoint to retrieve a feed formulation by its formulationId and date.
      *
      * @param formulationId The ID of the formulation.
      * @param date The date of the formulation.
      * @return The retrieved FeedResponseDTO with the formulation details.
      */
     @GetMapping("/{formulationId}/{date}")
-    public ResponseEntity<FeedResponseDTO> getFormulation(@PathVariable String formulationId, @PathVariable String date) {
-        FeedResponseDTO response = feedFormulationService.getFeedResponseByFormulationIdAndDate(formulationId, date);
+    public ResponseEntity<FeedResponseDTO> getFormulationByIdAndDate(
+            @PathVariable String formulationId, @PathVariable String date) {
+        FeedResponseDTO response = feedFormulationService.getFormulationByIdAndDate(formulationId, date);
         return ResponseEntity.ok(response);
     }
+
     /**
      * Endpoint to retrieve all feed formulations.
      *
      * @return A list of all FeedResponseDTOs.
      */
     @GetMapping
-    public ResponseEntity<List<FeedResponseDTO>> getAllFormulations() {
-        List<FeedResponseDTO> formulations = feedFormulationService.getAllFeedFormulations();
+    public ResponseEntity<List<FeedResponseDTO>> getFormulations() {
+        List<FeedResponseDTO> formulations = feedFormulationService.getFormulations();
         return ResponseEntity.ok(formulations);
     }
 
@@ -66,8 +68,10 @@ public class FeedFormulationController {
      * @return The updated FeedResponseDTO with the new formulation details.
      */
     @PutMapping("/{formulationId}/{date}")
-    public ResponseEntity<FeedResponseDTO> updateFormulation(@PathVariable String formulationId, @PathVariable String date, @Valid @RequestBody FeedRequestDTO request) {
-        FeedResponseDTO response = feedFormulationService.updateFeedResponse(formulationId, date, request);
+    public ResponseEntity<FeedResponseDTO> updateFeedFormulationByIdAndDate(
+            @PathVariable String formulationId, @PathVariable String date,
+            @Valid @RequestBody FeedRequestDTO request) {
+        FeedResponseDTO response = feedFormulationService.updateFeedFormulationByIdAndDate(formulationId, date, request);
         return ResponseEntity.ok(response);
     }
 
@@ -79,8 +83,9 @@ public class FeedFormulationController {
      * @return A response entity with no content.
      */
     @DeleteMapping("/{formulationId}/{date}")
-    public ResponseEntity<Void> deleteFormulation(@PathVariable String formulationId, @PathVariable String date) {
-        feedFormulationService.deleteFeedResponse(formulationId, date);
+    public ResponseEntity<Void> deleteFeedFormulationByIdAndDate(
+            @PathVariable String formulationId, @PathVariable String date) {
+        feedFormulationService.deleteFeedFormulationByIdAndDate(formulationId, date);
         return ResponseEntity.noContent().build();
     }
 }

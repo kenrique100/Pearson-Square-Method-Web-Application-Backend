@@ -19,7 +19,7 @@ import java.util.List;
 public class FeedFormulation {
 
     @Id
-    @Column(length = 5, unique = true, nullable = false)
+    @Column(length = 36, unique = true, nullable = false)
     private String formulationId;
 
     @Column(unique = true, nullable = false)
@@ -29,11 +29,11 @@ public class FeedFormulation {
     @Column(nullable = false)
     private LocalDate date = LocalDate.now(); // Default value for date
 
-    @Column(name = "total_quantity_kg")
-    private double totalQuantityKg;
-
     @Column(nullable = false)
     private double targetCpValue;
+
+    @Column(name = "total_quantity_kg")
+    private double totalQuantityKg;
 
     // Set FetchType to EAGER so ingredients are fetched when FeedFormulation is queried
     @Builder.Default

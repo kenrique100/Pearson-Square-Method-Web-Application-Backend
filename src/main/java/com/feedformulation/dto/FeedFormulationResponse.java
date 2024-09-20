@@ -9,11 +9,10 @@ import java.util.List;
 @Data
 @Builder
 public class FeedFormulationResponse {
-
     private String formulationId;
     private String formulationName;
     private LocalDate date;
     private double totalQuantityKg;
     private double targetCpValue;
-    private List<Ingredient2DTO> ingredients;
+    private List<Ingredient2DTO> ingredient2s;
 }

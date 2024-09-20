@@ -24,8 +24,8 @@ public class CustomFeedController {
      * @return HTTP 200 OK response with the created feed formulation object in the response body
      */
     @PostMapping
-    public ResponseEntity<FeedFormulation> createFeedFormulation(@RequestBody FeedFormulationRequest request) {
-        FeedFormulation formulation = feedFormulationService2.createFeedFormulation(request);
+    public ResponseEntity<FeedFormulation> createCustomFormulation(@RequestBody FeedFormulationRequest request) {
+        FeedFormulation formulation = feedFormulationService2.createCustomFormulation(request);
         return ResponseEntity.ok(formulation);
     }
 
@@ -37,8 +37,8 @@ public class CustomFeedController {
      * @return HTTP 200 OK response with the corresponding feed formulation object
      */
     @GetMapping("/{id}/{date}")
-    public ResponseEntity<FeedFormulation> getFeedFormulationByIdAndDate(@PathVariable String id, @PathVariable String date) {
-        FeedFormulation formulation = feedFormulationService2.getFeedFormulationByIdAndDate(id, date);
+    public ResponseEntity<FeedFormulation> getCustomFormulationByIdAndDate(@PathVariable String id, @PathVariable String date) {
+        FeedFormulation formulation = feedFormulationService2.getCustomFormulationByIdAndDate(id, date);
         return ResponseEntity.ok(formulation);
     }
 
@@ -48,8 +48,8 @@ public class CustomFeedController {
      * @return HTTP 200 OK response with a list of all feed formulations
      */
     @GetMapping
-    public ResponseEntity<List<FeedFormulationResponse>> getAllFeedFormulations() {
-        List<FeedFormulationResponse> formulations = feedFormulationService2.getAllFeedFormulations();
+    public ResponseEntity<List<FeedFormulationResponse>> getCustomFormulations() {
+        List<FeedFormulationResponse> formulations = feedFormulationService2.getCustomFormulations();
         return ResponseEntity.ok(formulations);
     }
 
@@ -62,10 +62,10 @@ public class CustomFeedController {
      * @return HTTP 200 OK response with the updated feed formulation object
      */
     @PutMapping("/{id}/{date}")
-    public ResponseEntity<FeedFormulation> updateFeedFormulationByIdAndDate(@PathVariable String id,
+    public ResponseEntity<FeedFormulation> updateCustomFeedFormulationByIdAndDate(@PathVariable String id,
                                                                             @PathVariable String date,
                                                                             @RequestBody FeedFormulationRequest request) {
-        FeedFormulation updatedFormulation = feedFormulationService2.updateFeedFormulationByIdAndDate(id, date, request);
+        FeedFormulation updatedFormulation = feedFormulationService2.updateCustomFeedFormulationByIdAndDate(id, date, request);
         return ResponseEntity.ok(updatedFormulation);
     }
 
@@ -77,8 +77,8 @@ public class CustomFeedController {
      * @return HTTP 204 No Content response after successful deletion
      */
     @DeleteMapping("/{id}/{date}")
-    public ResponseEntity<Void> deleteFeedFormulationByIdAndDate(@PathVariable String id, @PathVariable String date) {
-        feedFormulationService2.deleteFeedFormulationByIdAndDate(id, date);
+    public ResponseEntity<Void> deleteCustomFeedFormulationByIdAndDate(@PathVariable String id, @PathVariable String date) {
+        feedFormulationService2.deleteCustomFeedFormulationByIdAndDate(id, date);
         return ResponseEntity.noContent().build();
     }
 }
