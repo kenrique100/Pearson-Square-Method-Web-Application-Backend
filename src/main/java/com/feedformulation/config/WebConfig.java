@@ -36,6 +36,7 @@ public class WebConfig {
                         .allowedHeaders("*") // Allow all headers from the frontend
                         .allowCredentials(true); // Enable sending cookies and credentials in requests
 
+            }
         };
     }
 }
