@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig {
-
     // Injects the frontend URL value from the application properties file
     @Value("${frontend.url}")
     private String frontendUrl;
@@ -36,7 +35,7 @@ public class WebConfig {
                         .allowedMethods("GET", "POST", "PUT", "DELETE") // Restrict HTTP methods to the specified ones
                         .allowedHeaders("*") // Allow all headers from the frontend
                         .allowCredentials(true); // Enable sending cookies and credentials in requests
-            }
+
         };
     }
 }
