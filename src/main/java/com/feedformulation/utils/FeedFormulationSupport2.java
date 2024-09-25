@@ -11,6 +11,14 @@ import java.util.List;
 @Component
 public class FeedFormulationSupport2 {
 
+    /**
+     * Calculates the total crude protein value from a list of ingredients
+     * based on their quantities and crude protein content.
+     *
+     * @param ingredients The list of ingredients.
+     * @param totalQuantity The total quantity of the formulation.
+     * @return The calculated total crude protein value, or 0 if total quantity is 0.
+     */
     public double calculateTotalCpValue(List<Ingredient2> ingredients, double totalQuantity) {
         double totalCrudeProtein = ingredients.stream()
                 .mapToDouble(ingredient -> ingredient.getQuantityKg() * getCrudeProteinByIngredient(ingredient.getName()))
@@ -18,6 +26,14 @@ public class FeedFormulationSupport2 {
         return totalQuantity > 0 ? round(totalCrudeProtein / totalQuantity) : 0.0;
     }
 
+    /**
+     * Creates a list of Ingredient2 objects for the feed formulation,
+     * mapping them from the provided FeedFormulationRequest.
+     *
+     * @param request The request containing ingredient data.
+     * @param formulation The associated FeedFormulation object.
+     * @return A list of Ingredient2 objects created from the request.
+     */
     public List<Ingredient2> createIngredients(FeedFormulationRequest request, FeedFormulation formulation) {
         List<Ingredient2> proteins = request.getProteins().stream()
                 .map(ingredient -> Ingredient2.builder()
@@ -43,6 +59,14 @@ public class FeedFormulationSupport2 {
         return mainIngredients;
     }
 
+    /**
+     * Creates a list of other ingredients based on the total quantity.
+     * These are usually additives or essential components.
+     *
+     * @param totalQuantity The total quantity of the feed formulation.
+     * @param formulation The associated FeedFormulation object.
+     * @return A list of Ingredient2 objects for the additional ingredients.
+     */
     public List<Ingredient2> createOtherIngredients(double totalQuantity, FeedFormulation formulation) {
         return List.of(
                 Ingredient2.builder().name("DiPhosphate Calcium").crudeProtein(Constants.CRUDE_00_VALUE)
@@ -64,12 +88,24 @@ public class FeedFormulationSupport2 {
         );
     }
 
+    /**
+     * Calculates the total quantity of ingredients from a list of ingredient requests.
+     *
+     * @param ingredients The list of ingredient requests.
+     * @return The total quantity of all ingredients in kilograms.
+     */
     public double calculateTotalQuantity(List<FeedFormulationRequest.IngredientRequest> ingredients) {
         return ingredients.stream()
                 .mapToDouble(FeedFormulationRequest.IngredientRequest::getQuantityKg)
                 .sum();
     }
 
+    /**
+     * Calculates the target crude protein value for the formulation based on its ingredients.
+     *
+     * @param request The request containing ingredient data.
+     * @return The calculated target crude protein value.
+     */
     public double calculateTargetCpValue(FeedFormulationRequest request) {
         double totalProteinsQuantity = calculateTotalQuantity(request.getProteins());
         double totalCarbohydratesQuantity = calculateTotalQuantity(request.getCarbohydrates());
@@ -85,6 +121,12 @@ public class FeedFormulationSupport2 {
         return totalQuantity > 0 ? round(totalCrudeProtein / totalQuantity) : 0.0;
     }
 
+    /**
+     * Returns the crude protein content for a specific ingredient based on its name.
+     *
+     * @param ingredientName The name of the ingredient.
+     * @return The crude protein value for the ingredient.
+     */
     private double getCrudeProteinByIngredient(String ingredientName) {
         return switch (ingredientName.toLowerCase()) {
             case "soya beans" -> Constants.CRUDE_SOYA_VALUE;
@@ -97,11 +139,24 @@ public class FeedFormulationSupport2 {
         };
     }
 
+    /**
+     * Rounds a given value to one decimal place.
+     *
+     * @param value The value to be rounded.
+     * @return The rounded value.
+     */
     private double round(double value) {
         long factor = (long) Math.pow(10, 1);
         return (double) Math.round(value * factor) / factor;
     }
 
+    /**
+     * Calculates the total quantity of ingredients from the request,
+     * considering both protein and carbohydrate ingredients.
+     *
+     * @param request The request containing ingredient data.
+     * @return The total quantity of all ingredients in kilograms.
+     */
     public double calculateTotalQuantityFromRequest(FeedFormulationRequest request) {
         double totalProteinsQuantity = calculateTotalQuantity(request.getProteins());
         double totalCarbohydratesQuantity = calculateTotalQuantity(request.getCarbohydrates());
