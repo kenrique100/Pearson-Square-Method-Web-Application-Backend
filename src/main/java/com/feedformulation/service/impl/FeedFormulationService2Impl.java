@@ -44,11 +44,11 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
     @Transactional
     @Override
     public FeedFormulation createCustomFormulation(FeedFormulationRequest request) {
-        validateRequest(request); // Validate the incoming request
+        validateRequest(request); // Basic validation (throws ValidationException)
 
-        // Check if the formulation name is unique
+        // Check if the formulation name is unique (business logic validation)
         if (feedFormulationRepository2.existsByFormulationName(request.getFormulationName())) {
-            throw new InvalidInputException("Formulation name must be unique."); // Throw exception if name is not unique
+            throw new InvalidInputException("Formulation name must be unique."); // Custom exception for business rules
         }
 
         // Calculate total quantity and target crude protein value from the request
@@ -108,13 +108,20 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
      * @param request The request object containing updated formulation details.
      * @return The updated FeedFormulation entity.
      */
+    @Transactional
     @Override
     public FeedFormulation updateCustomFeedFormulationByIdAndDate(String id, String date, FeedFormulationRequest request) {
-        validateRequest(request); // Validate the incoming request
+        validateRequest(request); // Basic validation (throws ValidationException)
 
         LocalDate localDate = LocalDate.parse(date);
         FeedFormulation existing = feedFormulationRepository2.findByFormulationIdAndDate(id, localDate)
                 .orElseThrow(() -> new FeedFormulationNotFoundException("Feed formulation not found for ID: " + id + " and Date: " + date));
+
+        // Business logic validation: ensure unique formulation name
+        if (!existing.getFormulationName().equals(request.getFormulationName()) &&
+                feedFormulationRepository2.existsByFormulationName(request.getFormulationName())) {
+            throw new InvalidInputException("Formulation name must be unique.");
+        }
 
         // Update existing formulation properties
         existing.setFormulationName(request.getFormulationName());
@@ -127,6 +134,21 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
         existing.getIngredient2s().addAll(newIngredients); // Add new ingredients
 
         return feedFormulationRepository2.save(existing); // Save the updated formulation to the database
+    }
+
+    /**
+     * Validates the provided FeedFormulationRequest to ensure it has the required ingredients.
+     *
+     * @param request The FeedFormulationRequest to validate.
+     * @throws ValidationException if the request is invalid.
+     */
+    private void validateRequest(FeedFormulationRequest request) {
+        if (request.getProteins() == null || request.getProteins().isEmpty()) {
+            throw new ValidationException("Proteins are required."); // Ensure at least one protein ingredient is present
+        }
+        if (request.getCarbohydrates() == null || request.getCarbohydrates().isEmpty()) {
+            throw new ValidationException("Carbohydrates are required."); // Ensure at least one carbohydrate ingredient is present
+        }
     }
 
     /**
@@ -175,20 +197,5 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
      */
     private String generateGuid() {
         return UUID.randomUUID().toString(); // Generate a random UUID
-    }
-
-    /**
-     * Validates the provided FeedFormulationRequest to ensure it has the required ingredients.
-     *
-     * @param request The FeedFormulationRequest to validate.
-     * @throws ValidationException if the request is invalid.
-     */
-    private void validateRequest(FeedFormulationRequest request) {
-        if (request.getProteins() == null || request.getProteins().isEmpty()) {
-            throw new ValidationException("Proteins are required."); // Ensure at least one protein ingredient is present
-        }
-        if (request.getCarbohydrates() == null || request.getCarbohydrates().isEmpty()) {
-            throw new ValidationException("Carbohydrates are required."); // Ensure at least one carbohydrate ingredient is present
-        }
     }
 }

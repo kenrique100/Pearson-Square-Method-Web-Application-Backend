@@ -2,32 +2,33 @@ package com.feedformulation.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor // Add this for no-argument constructor
 public class FeedFormulationRequest {
 
-    // Field to capture the name of the feed formulation, cannot be null
     @NotNull(message = "Formulation name is required.")
     private String formulationName;
 
-    // List of protein ingredients required in the formulation, cannot be empty
     @NotEmpty(message = "At least one protein ingredient is required.")
-    private List<IngredientRequest> proteins;  // List for protein ingredients
+    private List<IngredientRequest> proteins;
 
-    // List of carbohydrate ingredients required in the formulation, cannot be empty
     @NotEmpty(message = "At least one carbohydrate ingredient is required.")
-    private List<IngredientRequest> carbohydrates;  // List for carbohydrate ingredients
+    private List<IngredientRequest> carbohydrates;
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class IngredientRequest {
-        // Name of the ingredient, cannot be null
         @NotNull
         private String name;
 
-        // Quantity of the ingredient in kilograms, cannot be null
         @NotNull
         private double quantityKg;
     }
