@@ -9,6 +9,7 @@ import com.feedformulation.model.Ingredient;
 import com.feedformulation.repository.FeedFormulationRepository;
 import com.feedformulation.service.FeedFormulationService;
 import com.feedformulation.utils.FeedFormulationSupport;
+import com.feedformulation.utils.ValidationUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,24 +42,19 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     public FeedResponseDTO createFeedFormulation(FeedRequestDTO request) {
         log.info("Starting feed formulation calculation.");
 
-        // Check if the formulation name is empty or null
-        if (request.getFormulationName() == null || request.getFormulationName().trim().isEmpty()) {
-            throw new InvalidInputException("Formulation name cannot be empty.");
+        // Validate formulation name using ternary-like syntax
+        String formulationName = request.getFormulationName();
+        boolean isFormulationNameInvalid = formulationName == null || formulationName.trim().isEmpty() || repository.existsByFormulationName(formulationName);
+
+        if (isFormulationNameInvalid) {
+            throw new InvalidInputException(formulationName == null || formulationName.trim().isEmpty()
+                    ? "Formulation name cannot be empty."
+                    : "Formulation name must be unique.");
         }
 
-        // Check if the formulation name is unique; throw exception if not
-        if (repository.existsByFormulationName(request.getFormulationName())) {
-            throw new InvalidInputException("Formulation name must be unique.");
-        }
 
-        // Validate the input quantity (should be positive) and target CP value using utility methods
-        if (request.getQuantity() <= 0) {
-            throw new InvalidInputException("Quantity must be greater than zero.");
-        }
-
-        if (request.getTargetCpValue() <= 1 || request.getTargetCpValue() > 100) {
-            throw new InvalidInputException("Target CP value must be between 1 and 100.");
-        }
+        // Use the utility method for validation
+        ValidationUtil.validateQuantityAndCpValue(request.getQuantity(), request.getTargetCpValue());
 
         // Validate other inputs using your support utility methods if needed
         support.validateRequest(request.getQuantity(), request.getTargetCpValue());
@@ -141,14 +137,8 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     public FeedResponseDTO updateFeedFormulationByIdAndDate(String formulationId, String date, FeedRequestDTO request) {
         log.info("Updating feed formulation with ID: {} and date: {}", formulationId, date);
 
-        // Validate the input request
-        if (request.getQuantity() <= 0) {
-            throw new InvalidInputException("Quantity must be greater than 0");
-        }
-
-        if (request.getTargetCpValue() < 1 || request.getTargetCpValue() > 100) {
-            throw new InvalidInputException("Target CP value must be between 1 and 100");
-        }
+        // Use the utility method for validation
+        ValidationUtil.validateQuantityAndCpValue(request.getQuantity(), request.getTargetCpValue());
 
         // Find the existing formulation by its ID and date; throw an exception if not found
         FeedResponse existingResponse = repository.findByFormulationIdAndDate(formulationId, String.valueOf(LocalDate.parse(date)))
