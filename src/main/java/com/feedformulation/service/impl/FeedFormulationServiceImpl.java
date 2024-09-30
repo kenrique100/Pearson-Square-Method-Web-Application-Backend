@@ -42,7 +42,7 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     public FeedResponseDTO createFeedFormulation(FeedRequestDTO request) {
         log.info("Starting feed formulation calculation.");
 
-        // Validate formulation name using ternary-like syntax
+        // Validate formulation name for valid and invalid formulation name
         String formulationName = request.getFormulationName();
         boolean isFormulationNameInvalid = formulationName == null || formulationName.trim().isEmpty() || repository.existsByFormulationName(formulationName);
 
