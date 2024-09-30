@@ -41,12 +41,26 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     public FeedResponseDTO createFeedFormulation(FeedRequestDTO request) {
         log.info("Starting feed formulation calculation.");
 
+        // Check if the formulation name is empty or null
+        if (request.getFormulationName() == null || request.getFormulationName().trim().isEmpty()) {
+            throw new InvalidInputException("Formulation name cannot be empty.");
+        }
+
         // Check if the formulation name is unique; throw exception if not
         if (repository.existsByFormulationName(request.getFormulationName())) {
             throw new InvalidInputException("Formulation name must be unique.");
         }
 
-        // Validate the input quantity and target CP value using utility methods
+        // Validate the input quantity (should be positive) and target CP value using utility methods
+        if (request.getQuantity() <= 0) {
+            throw new InvalidInputException("Quantity must be greater than zero.");
+        }
+
+        if (request.getTargetCpValue() <= 1 || request.getTargetCpValue() > 100) {
+            throw new InvalidInputException("Target CP value must be between 1 and 100.");
+        }
+
+        // Validate other inputs using your support utility methods if needed
         support.validateRequest(request.getQuantity(), request.getTargetCpValue());
 
         // Create the list of ingredients based on the specified quantity
@@ -61,6 +75,7 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
         log.info("Feed formulation calculation completed.");
         return support.mapToDTO(savedResponse);  // Map to DTO for response
     }
+
 
     /**
      * Helper method to create a FeedResponse object based on request and ingredients.
@@ -77,7 +92,7 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
                 .formulationName(request.getFormulationName())
                 .quantity(totalQuantityKg)               // Set total quantity here
                 .targetCpValue(request.getTargetCpValue())
-                .ingredients(ingredients)                 // Set the list of ingredients
+                .ingredients(ingredients)                // Add the ingredients
                 .build();
     }
 
@@ -126,6 +141,15 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     public FeedResponseDTO updateFeedFormulationByIdAndDate(String formulationId, String date, FeedRequestDTO request) {
         log.info("Updating feed formulation with ID: {} and date: {}", formulationId, date);
 
+        // Validate the input request
+        if (request.getQuantity() <= 0) {
+            throw new InvalidInputException("Quantity must be greater than 0");
+        }
+
+        if (request.getTargetCpValue() < 1 || request.getTargetCpValue() > 100) {
+            throw new InvalidInputException("Target CP value must be between 1 and 100");
+        }
+
         // Find the existing formulation by its ID and date; throw an exception if not found
         FeedResponse existingResponse = repository.findByFormulationIdAndDate(formulationId, String.valueOf(LocalDate.parse(date)))
                 .orElseThrow(() -> new InvalidInputException("Feed formulation not found"));
@@ -136,8 +160,9 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
         existingResponse.setTargetCpValue(request.getTargetCpValue());
 
         // Save and return the updated formulation as a DTO
-        return support.mapToDTO(repository.save(existingResponse)); // Save and map to DTO
+        return support.mapToDTO(repository.save(existingResponse));
     }
+
 
     /**
      * Deletes a feed formulation by its formulationId and date.
