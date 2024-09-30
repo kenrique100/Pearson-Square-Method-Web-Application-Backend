@@ -137,7 +137,7 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     public FeedResponseDTO updateFeedFormulationByIdAndDate(String formulationId, String date, FeedRequestDTO request) {
         log.info("Updating feed formulation with ID: {} and date: {}", formulationId, date);
 
-        // Use the utility method for validation
+        // Use the utility method for validation of formulation quantity and cp value
         ValidationUtil.validateQuantityAndCpValue(request.getQuantity(), request.getTargetCpValue());
 
         // Find the existing formulation by its ID and date; throw an exception if not found
