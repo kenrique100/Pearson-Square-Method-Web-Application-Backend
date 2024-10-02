@@ -63,8 +63,8 @@ public class CustomFeedController {
      */
     @PutMapping("/{id}/{date}")
     public ResponseEntity<FeedFormulation> updateCustomFeedFormulationByIdAndDate(@PathVariable String id,
-                                                                            @PathVariable String date,
-                                                                            @RequestBody FeedFormulationRequest request) {
+                                                                                  @PathVariable String date,
+                                                                                  @RequestBody FeedFormulationRequest request) {
         FeedFormulation updatedFormulation = feedFormulationService2.updateCustomFeedFormulationByIdAndDate(id, date, request);
         return ResponseEntity.ok(updatedFormulation);
     }

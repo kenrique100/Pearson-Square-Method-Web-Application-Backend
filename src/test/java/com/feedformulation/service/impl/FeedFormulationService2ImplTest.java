@@ -6,7 +6,6 @@ import com.feedformulation.model.FeedFormulation;
 import com.feedformulation.repository.FeedFormulationRepository2;
 import com.feedformulation.utils.FeedFormulationSupport2;
 import jakarta.validation.ValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -60,23 +59,22 @@ class FeedFormulationService2ImplTest {
                 .build();
     }
 
-    // Helper methods for valid and invalid FeedFormulationRequest
-    private static @NotNull FeedFormulationRequest getValidFeedFormulationRequest() {
-        FeedFormulationRequest request = new FeedFormulationRequest();
-        request.setFormulationName("Valid Formulation");
-        request.setProteins(Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Soya Beans", 50.0)));
-        request.setCarbohydrates(Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Maize", 100.0)));
-        return request;
+    private static FeedFormulationRequest getValidFeedFormulationRequest() {
+        return new FeedFormulationRequest(
+                "Valid Formulation",
+                Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Soya Beans", 50.0)),
+                Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Maize", 100.0))
+        );
     }
 
-    private static @NotNull FeedFormulationRequest getInvalidFeedFormulationRequest() {
-        FeedFormulationRequest request = new FeedFormulationRequest();
-        request.setFormulationName("");  // Invalid empty name
-        request.setProteins(Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Soya Beans", -50.0)));  // Invalid negative quantity
-        return request;
+    private static FeedFormulationRequest getInvalidFeedFormulationRequest() {
+        return new FeedFormulationRequest(
+                "",  // Invalid empty name
+                Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Soya Beans", -50.0)),  // Invalid negative quantity
+                Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Maize", 100.0))
+        );
     }
 
-    // Test for creating a valid feed formulation
     @Test
     void createCustomFormulation_validRequest_success() {
         // Arrange
@@ -96,15 +94,13 @@ class FeedFormulationService2ImplTest {
         verify(feedFormulationRepository2).save(any(FeedFormulation.class));
     }
 
-    // Test for creating a feed formulation with invalid request
     @Test
     void createCustomFormulation_invalidRequest_throwsException() {
         // Act & Assert
         assertThrows(ValidationException.class, () -> feedFormulationService2.createCustomFormulation(invalidRequest));
-        verify(feedFormulationRepository2, times(0)).save(any(FeedFormulation.class));  // Ensure no save was attempted
+        verify(feedFormulationRepository2, never()).save(any(FeedFormulation.class));  // Ensure no save was attempted
     }
 
-    // Test for retrieving a feed formulation by valid ID and date
     @Test
     void getCustomFormulationByIdAndDate_validIdAndDate_success() {
         // Arrange
@@ -120,7 +116,6 @@ class FeedFormulationService2ImplTest {
         verify(feedFormulationRepository2).findByFormulationIdAndDate(anyString(), any(LocalDate.class));
     }
 
-    // Test for retrieving a feed formulation with invalid ID and date
     @Test
     void getCustomFormulationByIdAndDate_invalidIdAndDate_throwsException() {
         // Arrange
@@ -132,7 +127,6 @@ class FeedFormulationService2ImplTest {
                 feedFormulationService2.getCustomFormulationByIdAndDate(UUID.randomUUID().toString(), LocalDate.now().toString()));
     }
 
-    // Test for updating a valid feed formulation
     @Test
     void updateCustomFeedFormulationByIdAndDate_validRequest_success() {
         // Arrange
@@ -148,7 +142,6 @@ class FeedFormulationService2ImplTest {
         verify(feedFormulationRepository2).save(any(FeedFormulation.class));
     }
 
-    // Test for updating with an invalid request
     @Test
     void updateCustomFeedFormulationByIdAndDate_invalidRequest_throwsException() {
         // Arrange
@@ -157,10 +150,9 @@ class FeedFormulationService2ImplTest {
         // Act & Assert
         assertThrows(ValidationException.class, () ->
                 feedFormulationService2.updateCustomFeedFormulationByIdAndDate(validFormulationId, validDate.toString(), invalidRequest));
-        verify(feedFormulationRepository2, times(0)).save(any(FeedFormulation.class));  // Ensure no save was attempted
+        verify(feedFormulationRepository2, never()).save(any(FeedFormulation.class));  // Ensure no save was attempted
     }
 
-    // Test for deleting a feed formulation by valid ID and date
     @Test
     void deleteCustomFeedFormulationByIdAndDate_validIdAndDate_success() {
         // Arrange
@@ -173,7 +165,6 @@ class FeedFormulationService2ImplTest {
         verify(feedFormulationRepository2).delete(any(FeedFormulation.class));
     }
 
-    // Test for deleting a feed formulation with invalid ID and date
     @Test
     void deleteCustomFeedFormulationByIdAndDate_invalidIdAndDate_throwsException() {
         // Arrange
@@ -182,6 +173,6 @@ class FeedFormulationService2ImplTest {
         // Act & Assert
         assertThrows(FeedFormulationNotFoundException.class, () ->
                 feedFormulationService2.deleteCustomFeedFormulationByIdAndDate(UUID.randomUUID().toString(), LocalDate.now().toString()));
-        verify(feedFormulationRepository2, times(0)).delete(any(FeedFormulation.class));  // Ensure no delete was attempted
+        verify(feedFormulationRepository2, never()).delete(any(FeedFormulation.class));  // Ensure no delete was attempted
     }
 }

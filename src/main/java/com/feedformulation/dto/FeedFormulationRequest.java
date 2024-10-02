@@ -2,6 +2,7 @@ package com.feedformulation.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,6 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor // Add this for no-argument constructor
 public class FeedFormulationRequest {
 
     @NotNull(message = "Formulation name is required.")
@@ -29,7 +29,7 @@ public class FeedFormulationRequest {
         @NotNull
         private String name;
 
-        @NotNull
+        @Positive(message = "Quantity must be positive.")
         private double quantityKg;
     }
 }

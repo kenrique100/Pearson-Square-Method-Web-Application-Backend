@@ -44,11 +44,16 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
     @Transactional
     @Override
     public FeedFormulation createCustomFormulation(FeedFormulationRequest request) {
-        validateRequest(request); // Basic validation (throws ValidationException)
+        validateRequest(request); // Validate the incoming request
 
-        // Check if the formulation name is unique (business logic validation)
-        if (feedFormulationRepository2.existsByFormulationName(request.getFormulationName())) {
-            throw new InvalidInputException("Formulation name must be unique."); // Custom exception for business rules
+        // Validate formulation name for valid and invalid formulation name
+        String formulationName = request.getFormulationName();
+        boolean isFormulationNameInvalid = formulationName == null || formulationName.trim().isEmpty() || feedFormulationRepository2.existsByFormulationName(request.getFormulationName());
+
+        if (isFormulationNameInvalid) {
+            throw new InvalidInputException(formulationName == null || formulationName.trim().isEmpty()
+                    ? "Formulation name cannot be empty."
+                    : "Formulation name must be unique.");
         }
 
         // Calculate total quantity and target crude protein value from the request
@@ -111,45 +116,33 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
     @Transactional
     @Override
     public FeedFormulation updateCustomFeedFormulationByIdAndDate(String id, String date, FeedFormulationRequest request) {
-        validateRequest(request); // Basic validation (throws ValidationException)
+        validateRequest(request); // Validate the incoming request
 
         LocalDate localDate = LocalDate.parse(date);
         FeedFormulation existing = feedFormulationRepository2.findByFormulationIdAndDate(id, localDate)
                 .orElseThrow(() -> new FeedFormulationNotFoundException("Feed formulation not found for ID: " + id + " and Date: " + date));
 
-        // Business logic validation: ensure unique formulation name
-        if (!existing.getFormulationName().equals(request.getFormulationName()) &&
-                feedFormulationRepository2.existsByFormulationName(request.getFormulationName())) {
-            throw new InvalidInputException("Formulation name must be unique.");
-        }
-
-        // Update existing formulation properties
+        // Update existing formulation properties (name, total quantity, and target CP value)
         existing.setFormulationName(request.getFormulationName());
-        existing.setTargetCpValue(feedFormulationSupport2.calculateTargetCpValue(request));
-        existing.setTotalQuantityKg(feedFormulationSupport2.calculateTotalQuantityFromRequest(request));
+        double newTotalQuantityKg = feedFormulationSupport2.calculateTotalQuantityFromRequest(request);
+        double newTargetCpValue = feedFormulationSupport2.calculateTargetCpValue(request);
+        existing.setTotalQuantityKg(newTotalQuantityKg);
+        existing.setTargetCpValue(newTargetCpValue);
 
-        // Create new ingredients and update the existing list
-        List<Ingredient2> newIngredients = feedFormulationSupport2.createIngredients(request, existing);
-        existing.getIngredient2s().clear(); // Clear existing ingredients
-        existing.getIngredient2s().addAll(newIngredients); // Add new ingredients
+        // Recreate and update new ingredients
+        List<Ingredient2> updatedMainIngredients = feedFormulationSupport2.createIngredients(request, existing);
+        List<Ingredient2> updatedOtherIngredients = feedFormulationSupport2.createOtherIngredients(newTotalQuantityKg, existing);
+        List<Ingredient2> allUpdatedIngredients = new ArrayList<>(updatedMainIngredients);
+        allUpdatedIngredients.addAll(updatedOtherIngredients);
 
-        return feedFormulationRepository2.save(existing); // Save the updated formulation to the database
+        // Clear existing ingredients and set the new ones
+        existing.getIngredient2s().clear();
+        existing.getIngredient2s().addAll(allUpdatedIngredients);
+
+        // Save and return the updated formulation
+        return feedFormulationRepository2.save(existing);
     }
 
-    /**
-     * Validates the provided FeedFormulationRequest to ensure it has the required ingredients.
-     *
-     * @param request The FeedFormulationRequest to validate.
-     * @throws ValidationException if the request is invalid.
-     */
-    private void validateRequest(FeedFormulationRequest request) {
-        if (request.getProteins() == null || request.getProteins().isEmpty()) {
-            throw new ValidationException("Proteins are required."); // Ensure at least one protein ingredient is present
-        }
-        if (request.getCarbohydrates() == null || request.getCarbohydrates().isEmpty()) {
-            throw new ValidationException("Carbohydrates are required."); // Ensure at least one carbohydrate ingredient is present
-        }
-    }
 
     /**
      * Deletes a custom feed formulation by its ID and date.
@@ -186,9 +179,10 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
                 .date(formulation.getDate())
                 .targetCpValue(formulation.getTargetCpValue())
                 .totalQuantityKg(formulation.getTotalQuantityKg())
-                .ingredient2s(ingredientDTOs) // Set the list of ingredient DTOs
+                .ingredient2s(ingredientDTOs) // Set the list of updated ingredient DTOs
                 .build();
     }
+
 
     /**
      * Generates a unique identifier for feed formulations using UUID.
@@ -197,5 +191,23 @@ public class FeedFormulationService2Impl implements FeedFormulationService2 {
      */
     private String generateGuid() {
         return UUID.randomUUID().toString(); // Generate a random UUID
+    }
+
+    /**
+     * Validates the provided FeedFormulationRequest to ensure it has the required ingredients.
+     *
+     * @param request The FeedFormulationRequest to validate.
+     * @throws ValidationException if the request is invalid.
+     */
+    private void validateRequest(FeedFormulationRequest request) {
+        String errorMessage = (request.getProteins() == null || request.getProteins().isEmpty())
+                ? "Proteins are required."
+                : (request.getCarbohydrates() == null || request.getCarbohydrates().isEmpty())
+                ? "Carbohydrates are required."
+                : null;
+
+        if (errorMessage != null) {
+            throw new ValidationException(errorMessage);
+        }
     }
 }
