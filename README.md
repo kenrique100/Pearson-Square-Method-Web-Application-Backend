@@ -17,5 +17,6 @@ The purpose of this project is to develop a feed composition calculator using th
 
 ***Below are the endpooints to be tested following CRUD for the various Http***
 ## Endpoints for Defualt backend http
-### POST ```http://localhost:8080/api/feed-formulation```
+### POST 
+```http://localhost:8080/api/feed-formulation```
 
