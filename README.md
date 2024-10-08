@@ -19,25 +19,8 @@ The purpose of this project is to develop a feed composition calculator using th
 ## Endpoints for Defualt backend http
 ### POST 
 <div>
-  <button onclick="copyToClipboard()">Copy Code</button>
-  <pre id="codeBlock">
+  <button onclick="copyToClipboard()"></button>
     <code>
     http://localhost:8080/api/feed-formulation
     </code>
-  </pre>
 </div>
-
-<script>
-  function copyToClipboard() {
-    var codeBlock = document.getElementById("codeBlock").textContent.trim();
-    var tempInput = document.createElement("textarea");
-    tempInput.value = codeBlock;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
-    alert("Code copied to clipboard!");
-  }
-</script>
-
-
