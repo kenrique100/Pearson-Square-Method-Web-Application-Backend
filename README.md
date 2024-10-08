@@ -19,12 +19,18 @@ The purpose of this project is to develop a feed composition calculator using th
 ## Endpoints for Defualt backend http
 ### POST 
 <div>
-  <button onclick="copyToClipboard()"></button>
+  <button onclick="copyToClipboard()">Copy</button>
   <pre>
-    <code>
-    http://localhost:8080/api/feed-formulation
-    </code>
+    <code>http://localhost:8080/api/feed-formulation</code>
   </pre>
 </div>
 
+<script>
+  function copyToClipboard() {
+    const text = 'http://localhost:8080/api/feed-formulation';
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copied to clipboard!');
+    });
+  }
+</script>
 
