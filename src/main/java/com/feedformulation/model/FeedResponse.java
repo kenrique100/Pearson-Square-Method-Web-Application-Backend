@@ -56,7 +56,4 @@ public class FeedResponse {
     @OneToMany(mappedBy = "feedResponse", cascade = CascadeType.ALL) // Defines the one-to-many relationship
     @Builder.Default // Sets a default value for the ingredients list when using the builder
     private List<Ingredient> ingredients = new ArrayList<>(); // Initializes the ingredients list to an empty ArrayList
-
-    // Default constructor for JPA
-    public FeedResponse() {}
 }

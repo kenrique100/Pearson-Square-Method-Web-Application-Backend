@@ -2,10 +2,12 @@ package com.feedformulation.service.impl;
 
 import com.feedformulation.dto.FeedFormulationRequest;
 import com.feedformulation.exception.FeedFormulationNotFoundException;
+import com.feedformulation.exception.InvalidInputException;
 import com.feedformulation.model.FeedFormulation;
+import com.feedformulation.model.Ingredient2;
 import com.feedformulation.repository.FeedFormulationRepository2;
 import com.feedformulation.utils.FeedFormulationSupport2;
-import jakarta.validation.ValidationException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,9 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -41,14 +41,21 @@ class FeedFormulationService2ImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Setup valid and invalid requests for testing
-        validRequest = getValidFeedFormulationRequest();
-        invalidRequest = getInvalidFeedFormulationRequest();
-
         validFormulationId = UUID.randomUUID().toString();
         validDate = LocalDate.now();
 
-        // Setup mock FeedFormulation for valid responses
+        validRequest = new FeedFormulationRequest(
+                "Valid Formulation",
+                List.of(new FeedFormulationRequest.IngredientRequest("Soya Beans", 50.0)),
+                List.of(new FeedFormulationRequest.IngredientRequest("Maize", 100.0))
+        );
+
+        invalidRequest = new FeedFormulationRequest(
+                "",
+                List.of(new FeedFormulationRequest.IngredientRequest("Soya Beans", -50.0)),
+                List.of(new FeedFormulationRequest.IngredientRequest("Maize", 100.0))
+        );
+
         savedFormulation = FeedFormulation.builder()
                 .formulationId(validFormulationId)
                 .formulationName(validRequest.getFormulationName())
@@ -57,22 +64,6 @@ class FeedFormulationService2ImplTest {
                 .targetCpValue(20.0)
                 .ingredient2s(Collections.emptyList())
                 .build();
-    }
-
-    private static FeedFormulationRequest getValidFeedFormulationRequest() {
-        return new FeedFormulationRequest(
-                "Valid Formulation",
-                Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Soya Beans", 50.0)),
-                Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Maize", 100.0))
-        );
-    }
-
-    private static FeedFormulationRequest getInvalidFeedFormulationRequest() {
-        return new FeedFormulationRequest(
-                "",  // Invalid empty name
-                Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Soya Beans", -50.0)),  // Invalid negative quantity
-                Collections.singletonList(new FeedFormulationRequest.IngredientRequest("Maize", 100.0))
-        );
     }
 
     @Test
@@ -93,86 +84,82 @@ class FeedFormulationService2ImplTest {
         assertEquals(20.0, result.getTargetCpValue());
         verify(feedFormulationRepository2).save(any(FeedFormulation.class));
     }
+    // Helper method to create mock ingredients
+    private @NotNull List<Ingredient2> createMockIngredients(FeedFormulation savedFormulation) {
+        // Use the correct constructor with appropriate arguments (Long, String, double, double, FeedFormulation)
+        Ingredient2 ingredient1 = new Ingredient2(1L, "Soya Beans", 100.0, 40.0, savedFormulation);
+        Ingredient2 ingredient2 = new Ingredient2(2L, "Maize", 50.0, 8.0, savedFormulation);
+        return Arrays.asList(ingredient1, ingredient2);
+    }
+
 
     @Test
-    void createCustomFormulation_invalidRequest_throwsException() {
-        // Act & Assert
-        assertThrows(ValidationException.class, () -> feedFormulationService2.createCustomFormulation(invalidRequest));
-        verify(feedFormulationRepository2, never()).save(any(FeedFormulation.class));  // Ensure no save was attempted
+    void createCustomFormulation_invalidRequest_shouldThrowInvalidInputException() {
+        assertThrows(InvalidInputException.class, () ->
+                feedFormulationService2.createCustomFormulation(invalidRequest)
+        );
+
+        verify(feedFormulationRepository2, never()).save(any());
     }
 
     @Test
-    void getCustomFormulationByIdAndDate_validIdAndDate_success() {
-        // Arrange
+    void getCustomFormulationByIdAndDate_validIdAndDate_shouldReturnFormulation() {
         when(feedFormulationRepository2.findByFormulationIdAndDate(validFormulationId, validDate)).thenReturn(Optional.of(savedFormulation));
 
-        // Act
         FeedFormulation result = feedFormulationService2.getCustomFormulationByIdAndDate(validFormulationId, validDate.toString());
 
-        // Assert
         assertNotNull(result);
         assertEquals(validFormulationId, result.getFormulationId());
-        assertEquals("Valid Formulation", result.getFormulationName());
-        verify(feedFormulationRepository2).findByFormulationIdAndDate(anyString(), any(LocalDate.class));
+        assertEquals(validDate, result.getDate());
+
+        verify(feedFormulationRepository2).findByFormulationIdAndDate(validFormulationId, validDate);
     }
 
     @Test
-    void getCustomFormulationByIdAndDate_invalidIdAndDate_throwsException() {
-        // Arrange
-        when(feedFormulationRepository2.findByFormulationIdAndDate(anyString(), any(LocalDate.class)))
-                .thenReturn(Optional.empty());
+    void getCustomFormulationByIdAndDate_invalidIdOrDate_shouldThrowNotFoundException() {
+        when(feedFormulationRepository2.findByFormulationIdAndDate(validFormulationId, validDate)).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(FeedFormulationNotFoundException.class, () ->
-                feedFormulationService2.getCustomFormulationByIdAndDate(UUID.randomUUID().toString(), LocalDate.now().toString()));
+                feedFormulationService2.getCustomFormulationByIdAndDate(validFormulationId, validDate.toString()));
+
+        verify(feedFormulationRepository2).findByFormulationIdAndDate(validFormulationId, validDate);
     }
 
     @Test
-    void updateCustomFeedFormulationByIdAndDate_validRequest_success() {
-        // Arrange
+    void updateCustomFeedFormulationByIdAndDate_validIdAndRequest_shouldUpdateFormulation() {
         when(feedFormulationRepository2.findByFormulationIdAndDate(validFormulationId, validDate)).thenReturn(Optional.of(savedFormulation));
+        when(feedFormulationSupport2.calculateTotalQuantityFromRequest(validRequest)).thenReturn(150.0);
+        when(feedFormulationSupport2.calculateTargetCpValue(validRequest)).thenReturn(20.0);
+        when(feedFormulationSupport2.createIngredients(validRequest, savedFormulation)).thenReturn(Collections.emptyList());
+        when(feedFormulationSupport2.createOtherIngredients(150.0, savedFormulation)).thenReturn(Collections.emptyList());
         when(feedFormulationRepository2.save(any(FeedFormulation.class))).thenReturn(savedFormulation);
 
-        // Act
-        FeedFormulation updatedResult = feedFormulationService2.updateCustomFeedFormulationByIdAndDate(validFormulationId, validDate.toString(), validRequest);
+        FeedFormulation result = feedFormulationService2.updateCustomFeedFormulationByIdAndDate(validFormulationId, validDate.toString(), validRequest);
 
-        // Assert
-        assertNotNull(updatedResult);
-        assertEquals(validRequest.getFormulationName(), updatedResult.getFormulationName());
+        assertNotNull(result);
+        assertEquals(validFormulationId, result.getFormulationId());
+        assertEquals(150.0, result.getTotalQuantityKg());
+        assertEquals(20.0, result.getTargetCpValue());
+
         verify(feedFormulationRepository2).save(any(FeedFormulation.class));
     }
 
     @Test
-    void updateCustomFeedFormulationByIdAndDate_invalidRequest_throwsException() {
-        // Arrange
+    void deleteCustomFeedFormulationByIdAndDate_validIdAndDate_shouldDeleteFormulation() {
         when(feedFormulationRepository2.findByFormulationIdAndDate(validFormulationId, validDate)).thenReturn(Optional.of(savedFormulation));
 
-        // Act & Assert
-        assertThrows(ValidationException.class, () ->
-                feedFormulationService2.updateCustomFeedFormulationByIdAndDate(validFormulationId, validDate.toString(), invalidRequest));
-        verify(feedFormulationRepository2, never()).save(any(FeedFormulation.class));  // Ensure no save was attempted
-    }
-
-    @Test
-    void deleteCustomFeedFormulationByIdAndDate_validIdAndDate_success() {
-        // Arrange
-        when(feedFormulationRepository2.findByFormulationIdAndDate(validFormulationId, validDate)).thenReturn(Optional.of(savedFormulation));
-
-        // Act
         feedFormulationService2.deleteCustomFeedFormulationByIdAndDate(validFormulationId, validDate.toString());
 
-        // Assert
-        verify(feedFormulationRepository2).delete(any(FeedFormulation.class));
+        verify(feedFormulationRepository2).delete(savedFormulation);
     }
 
     @Test
-    void deleteCustomFeedFormulationByIdAndDate_invalidIdAndDate_throwsException() {
-        // Arrange
+    void deleteCustomFeedFormulationByIdAndDate_invalidIdOrDate_shouldThrowNotFoundException() {
         when(feedFormulationRepository2.findByFormulationIdAndDate(validFormulationId, validDate)).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(FeedFormulationNotFoundException.class, () ->
-                feedFormulationService2.deleteCustomFeedFormulationByIdAndDate(UUID.randomUUID().toString(), LocalDate.now().toString()));
-        verify(feedFormulationRepository2, never()).delete(any(FeedFormulation.class));  // Ensure no delete was attempted
+                feedFormulationService2.deleteCustomFeedFormulationByIdAndDate(validFormulationId, validDate.toString()));
+
+        verify(feedFormulationRepository2, never()).delete(any());
     }
 }

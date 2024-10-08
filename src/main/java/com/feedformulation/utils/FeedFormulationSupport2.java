@@ -12,21 +12,6 @@ import java.util.List;
 public class FeedFormulationSupport2 {
 
     /**
-     * Calculates the total crude protein value from a list of ingredients
-     * based on their quantities and crude protein content.
-     *
-     * @param ingredients The list of ingredients.
-     * @param totalQuantity The total quantity of the formulation.
-     * @return The calculated total crude protein value, or 0 if total quantity is 0.
-     */
-    public double calculateTotalCpValue(List<Ingredient2> ingredients, double totalQuantity) {
-        double totalCrudeProtein = ingredients.stream()
-                .mapToDouble(ingredient -> ingredient.getQuantityKg() * getCrudeProteinByIngredient(ingredient.getName()))
-                .sum();
-        return totalQuantity > 0 ? round(totalCrudeProtein / totalQuantity) : 0.0;
-    }
-
-    /**
      * Creates a list of Ingredient2 objects for the feed formulation,
      * mapping them from the provided FeedFormulationRequest.
      *
