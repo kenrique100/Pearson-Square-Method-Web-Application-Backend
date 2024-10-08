@@ -20,7 +20,11 @@ The purpose of this project is to develop a feed composition calculator using th
 ### POST 
 <div>
   <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
     <code>
     http://localhost:8080/api/feed-formulation
     </code>
+  </pre>
 </div>
+
+
