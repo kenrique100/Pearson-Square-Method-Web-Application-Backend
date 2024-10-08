@@ -33,7 +33,7 @@ The purpose of this project is to develop a feed composition calculator using th
   <pre id="codeBlock">
     <code>
     {
-    "formulationName": "Feed test 1",
+    "formulationName": "Name",
     "quantity":500,
     "targetCpValue":40
     }
@@ -41,4 +41,91 @@ The purpose of this project is to develop a feed composition calculator using th
   </pre>
 </div>
 
+### Response 
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+   {
+    "formulationId": "74732",
+    "formulationName": "Name",
+    "date": "2024-10-08",
+    "quantity": 0.0,
+    "targetCpValue": 65.0,
+    "ingredients": [
+        {
+            "name": "Soya beans",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Groundnuts",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Blood Meal",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Fish Meal",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Maize",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Cassava",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Diphosphate Calcium",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Bone Meal",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Marine Shell Flour",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Salt",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Vitamin C",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Premix",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Palm Oil",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        },
+        {
+            "name": "Anti-toxin",
+            "crudeProtein": 0.0,
+            "quantity": 0.0
+        }
+                ]
+    }
+    </code>
+  </pre>
+</div>
 
