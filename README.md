@@ -10,4 +10,12 @@ The purpose of this project is to develop a feed composition calculator using th
 - JUnit test coverage for key functionality.
 - A clear and maintainable codebase with a structured package design.
 
+# 1.3. User Characteristics
+- The application is made up of 2 models the default model that requires total quantity and totalCpvalue and the Custom with requires the values of atleast 1 Protein and atleast 1 Carbohydrate ingredient to create a total feed formulation with total quantity provided and totalCpValue of the formulation with values for addictive added respectfully.
+- Users are knowledgeable in feed formulation and nutrient balance.
+- Users expect accuracy in feed composition calculations.
+
+***Below are the endpooints to be tested following CRUD for the various Http***
+## Endpoints for Defualt backend http
+### POST ```http://localhost:8080/api/feed-formulation```
 
