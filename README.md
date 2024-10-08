@@ -18,19 +18,28 @@ The purpose of this project is to develop a feed composition calculator using th
 ***Below are the endpooints to be tested following CRUD for the various Http***
 ## Endpoints for Defualt backend http
 ### POST 
-<div>
-  <button onclick="copyToClipboard()">Copy</button>
-  <pre>
-    <code>http://localhost:8080/api/feed-formulation</code>
-  </pre>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Endpoint</title>
+</head>
+<body>
+  <div>
+    <button onclick="copyToClipboard()">Copy</button>
+    <pre><code>http://localhost:8080/api/feed-formulation</code></pre>
+  </div>
 
-<script>
-  function copyToClipboard() {
-    const text = 'http://localhost:8080/api/feed-formulation';
-    navigator.clipboard.writeText(text).then(() => {
-      alert('Copied to clipboard!');
-    });
-  }
-</script>
+  <script>
+    function copyToClipboard() {
+      const text = 'http://localhost:8080/api/feed-formulation';
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+</html>
+
 
