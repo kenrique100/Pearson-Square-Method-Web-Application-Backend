@@ -27,3 +27,17 @@ The purpose of this project is to develop a feed composition calculator using th
   </pre>
 </div>
 
+<script>
+  function copyToClipboard() {
+    var codeBlock = document.getElementById("codeBlock").textContent.trim();
+    var tempInput = document.createElement("textarea");
+    tempInput.value = codeBlock;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    alert("Code copied to clipboard!");
+  }
+</script>
+
+
