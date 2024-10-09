@@ -33,10 +33,10 @@ The purpose of this project is to develop a feed composition calculator using th
   <pre id="codeBlock">
     <code>
     {
-    "formulationName": "Name",
-    "quantity":500,
-    "targetCpValue":40
-    }
+    "formulationName": "Feed test 26",
+    "quantity":4500,
+    "targetCpValue":65
+}
     </code>
   </pre>
 </div>
@@ -47,84 +47,84 @@ The purpose of this project is to develop a feed composition calculator using th
   <pre id="codeBlock">
     <code>
    {
-    "formulationId": "74732",
-    "formulationName": "Name",
-    "date": "2024-10-08",
-    "quantity": 0.0,
+    "formulationId": "27502",
+    "formulationName": "Feed test 26",
+    "date": "2024-10-09",
+    "quantity": 4285.076086956522,
     "targetCpValue": 65.0,
     "ingredients": [
         {
             "name": "Soya beans",
-            "crudeProtein": 0.0,
-            "quantity": 0.0
+            "crudeProtein": 44.0,
+            "quantity": 1350.0
         },
         {
             "name": "Groundnuts",
-            "crudeProtein": 0.0,
-            "quantity": 0.0
+            "crudeProtein": 45.0,
+            "quantity": 450.0
         },
         {
             "name": "Blood Meal",
-            "crudeProtein": 0.0,
-            "quantity": 0.0
+            "crudeProtein": 80.0,
+            "quantity": 225.0
         },
         {
             "name": "Fish Meal",
-            "crudeProtein": 0.0,
-            "quantity": 0.0
+            "crudeProtein": 65.0,
+            "quantity": 450.0
         },
         {
             "name": "Maize",
-            "crudeProtein": 0.0,
-            "quantity": 0.0
+            "crudeProtein": 9.0,
+            "quantity": 900.0
         },
         {
             "name": "Cassava",
-            "crudeProtein": 0.0,
-            "quantity": 0.0
+            "crudeProtein": 2.0,
+            "quantity": 450.0
         },
         {
             "name": "Diphosphate Calcium",
             "crudeProtein": 0.0,
-            "quantity": 0.0
+            "quantity": 90.0
         },
         {
             "name": "Bone Meal",
             "crudeProtein": 0.0,
-            "quantity": 0.0
+            "quantity": 90.0
         },
         {
             "name": "Marine Shell Flour",
             "crudeProtein": 0.0,
-            "quantity": 0.0
+            "quantity": 90.0
         },
         {
             "name": "Salt",
             "crudeProtein": 0.0,
-            "quantity": 0.0
+            "quantity": 22.5
         },
         {
             "name": "Vitamin C",
             "crudeProtein": 0.0,
-            "quantity": 0.0
+            "quantity": 22.5
         },
         {
             "name": "Premix",
             "crudeProtein": 0.0,
-            "quantity": 0.0
+            "quantity": 45.0
         },
         {
             "name": "Palm Oil",
             "crudeProtein": 0.0,
-            "quantity": 0.0
+            "quantity": 97.82608695652173
         },
         {
             "name": "Anti-toxin",
             "crudeProtein": 0.0,
-            "quantity": 0.0
+            "quantity": 2.25
         }
-                ]
-    }
+    ]
+}
     </code>
   </pre>
 </div>
