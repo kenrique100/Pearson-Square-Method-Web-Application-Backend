@@ -410,7 +410,7 @@ The purpose of this project is to develop a feed composition calculator using th
   <button onclick="copyToClipboard()"></button>
   <pre id="codeBlock">
     <code>
-    http://localhost:8080/api/feed-formulation
+    http://localhost:8080/api/feed-formulations
     </code>
   </pre>
 </div>
@@ -420,7 +420,7 @@ The purpose of this project is to develop a feed composition calculator using th
   <button onclick="copyToClipboard()"></button>
   <pre id="codeBlock">
     <code>
-    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    http://localhost:8080/api/feed-formulations/{ID}/{DATE}
     </code>
   </pre>
 </div>
@@ -430,7 +430,7 @@ The purpose of this project is to develop a feed composition calculator using th
   <button onclick="copyToClipboard()"></button>
   <pre id="codeBlock">
     <code>
-    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    http://localhost:8080/api/feed-formulations/{ID}/{DATE}
     </code>
   </pre>
 </div>
@@ -542,7 +542,7 @@ The purpose of this project is to develop a feed composition calculator using th
   <button onclick="copyToClipboard()"></button>
   <pre id="codeBlock">
     <code>
-    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    http://localhost:8080/api/feed-formulations/{ID}/{DATE}
     </code>
   </pre>
 </div>
