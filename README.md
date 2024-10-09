@@ -260,3 +260,289 @@ The purpose of this project is to develop a feed composition calculator using th
     </code>
   </pre>
 </div>
+
+### DELETE to delete a specific formulation
+## DEL <div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    </code>
+  </pre>
+</div>
+
+
+
+# Endpoints for Custom backend http
+### POST 
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulations
+    </code>
+  </pre>
+</div>
+
+### Request
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    {
+  "formulationName": "Starter Feed 1",
+  "proteins": [
+    {
+      "name": "Soya Beans",
+      "quantityKg":
+    },
+    {
+      "name": "Fish Meal",
+      "quantityKg":
+    }
+  ],
+  "carbohydrates": [
+    {
+      "name": "Maize",
+      "quantityKg":
+    },
+    {
+      "name": "Cassava",
+      "quantityKg":
+    }
+  ]
+}
+
+</code>
+  </pre>
+</div>
+
+### Response 
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+   {
+    "formulationId": "",
+    "formulationName": "",
+    "date": "",
+    "quantity": ,
+    "targetCpValue": ,
+    "ingredients": [
+        {
+            "name": "Soya beans",
+            "crudeProtein": 44.0,
+            "quantity": 
+        },
+        {
+            "name": "Groundnuts",
+            "crudeProtein": 45.0,
+            "quantity": 
+        },
+        {
+            "name": "Blood Meal",
+            "crudeProtein": 80.0,
+            "quantity": 
+        },
+        {
+            "name": "Fish Meal",
+            "crudeProtein": 65.0,
+            "quantity": 
+        },
+        {
+            "name": "Maize",
+            "crudeProtein": 9.0,
+            "quantity":
+        },
+        {
+            "name": "Cassava",
+            "crudeProtein": 2.0,
+            "quantity": 
+        },
+        {
+            "name": "Diphosphate Calcium",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Bone Meal",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Marine Shell Flour",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Salt",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Vitamin C",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Premix",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Palm Oil",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Anti-toxin",
+            "crudeProtein": 0.0,
+            "quantity": 
+        }
+    ]
+}
+    </code>
+  </pre>
+</div>
+
+### GET request for all forulations
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulation
+    </code>
+  </pre>
+</div>
+
+### GET request for a specific Formulation by ID and Date of creation
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    </code>
+  </pre>
+</div>
+
+### PUT to update a specific formulation
+## PUT <div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    </code>
+  </pre>
+</div>
+
+### Request
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    {
+    "formulationName": "",
+    "quantity":,
+    "targetCpValue":
+    }
+    </code>
+  </pre>
+</div>
+
+### Response
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+   {
+    "formulationId": "",
+    "formulationName": "",
+    "date": "",
+    "quantity": ,
+    "targetCpValue": ,
+    "ingredients": [
+        {
+            "name": "Soya beans",
+            "crudeProtein": 44.0,
+            "quantity": 
+        },
+        {
+            "name": "Groundnuts",
+            "crudeProtein": 45.0,
+            "quantity": 
+        },
+        {
+            "name": "Blood Meal",
+            "crudeProtein": 80.0,
+            "quantity": 
+        },
+        {
+            "name": "Fish Meal",
+            "crudeProtein": 65.0,
+            "quantity": 
+        },
+        {
+            "name": "Maize",
+            "crudeProtein": 9.0,
+            "quantity":
+        },
+        {
+            "name": "Cassava",
+            "crudeProtein": 2.0,
+            "quantity": 
+        },
+        {
+            "name": "Diphosphate Calcium",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Bone Meal",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Marine Shell Flour",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Salt",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Vitamin C",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Premix",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Palm Oil",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Anti-toxin",
+            "crudeProtein": 0.0,
+            "quantity": 
+        }
+    ]
+}
+    </code>
+  </pre>
+</div>
+
+### DELETE to delete a specific formulation
+## DEL <div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    </code>
+  </pre>
+</div>
