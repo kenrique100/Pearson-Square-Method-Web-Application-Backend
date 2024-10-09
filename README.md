@@ -4,7 +4,7 @@ The purpose of this project is to develop a feed composition calculator using th
 ### 1.1.1 Project Scope
 ***The project involves building a backend service with the following features:***
 - An API that receives a batch number and target CP value as inputs and returns the appropriate ingredient proportions.
-- An API that recieved the values of atleast 1 Protein and atleast 1 Carbohydrate ingredient to create a total feed formulation with total quantity provided and totalCpValue of the formulation with values for addictive added respectfully.
+- An API that collects the values of atleast 1 Protein and atleast 1 Carbohydrate ingredient to create a total feed formulation with total quantity provided and totalCpValue of the formulation with values for addictive added respectfully.
 - A calculation algorithm based on the Pearson Square method, adapted for multiple ingredients.
 - Validations and exception handling for the input values.
 - JUnit test coverage for key functionality.
@@ -33,9 +33,9 @@ The purpose of this project is to develop a feed composition calculator using th
   <pre id="codeBlock">
     <code>
     {
-    "formulationName": "Feed test 26",
-    "quantity":4500,
-    "targetCpValue":65
+    "formulationName": "",
+    "quantity":,
+    "targetCpValue":
 }
     </code>
   </pre>
@@ -47,81 +47,81 @@ The purpose of this project is to develop a feed composition calculator using th
   <pre id="codeBlock">
     <code>
    {
-    "formulationId": "27502",
-    "formulationName": "Feed test 26",
-    "date": "2024-10-09",
-    "quantity": 4285.076086956522,
-    "targetCpValue": 65.0,
+    "formulationId": "",
+    "formulationName": "",
+    "date": "",
+    "quantity": ,
+    "targetCpValue": ,
     "ingredients": [
         {
             "name": "Soya beans",
             "crudeProtein": 44.0,
-            "quantity": 1350.0
+            "quantity": 
         },
         {
             "name": "Groundnuts",
             "crudeProtein": 45.0,
-            "quantity": 450.0
+            "quantity": 
         },
         {
             "name": "Blood Meal",
             "crudeProtein": 80.0,
-            "quantity": 225.0
+            "quantity": 
         },
         {
             "name": "Fish Meal",
             "crudeProtein": 65.0,
-            "quantity": 450.0
+            "quantity": 
         },
         {
             "name": "Maize",
             "crudeProtein": 9.0,
-            "quantity": 900.0
+            "quantity":
         },
         {
             "name": "Cassava",
             "crudeProtein": 2.0,
-            "quantity": 450.0
+            "quantity": 
         },
         {
             "name": "Diphosphate Calcium",
             "crudeProtein": 0.0,
-            "quantity": 90.0
+            "quantity": 
         },
         {
             "name": "Bone Meal",
             "crudeProtein": 0.0,
-            "quantity": 90.0
+            "quantity": 
         },
         {
             "name": "Marine Shell Flour",
             "crudeProtein": 0.0,
-            "quantity": 90.0
+            "quantity": 
         },
         {
             "name": "Salt",
             "crudeProtein": 0.0,
-            "quantity": 22.5
+            "quantity": 
         },
         {
             "name": "Vitamin C",
             "crudeProtein": 0.0,
-            "quantity": 22.5
+            "quantity": 
         },
         {
             "name": "Premix",
             "crudeProtein": 0.0,
-            "quantity": 45.0
+            "quantity": 
         },
         {
             "name": "Palm Oil",
             "crudeProtein": 0.0,
-            "quantity": 97.82608695652173
+            "quantity": 
         },
         {
             "name": "Anti-toxin",
             "crudeProtein": 0.0,
-            "quantity": 2.25
+            "quantity": 
         }
     ]
 }
@@ -129,3 +129,134 @@ The purpose of this project is to develop a feed composition calculator using th
   </pre>
 </div>
 
+### GET request for all forulations
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulation
+    </code>
+  </pre>
+</div>
+
+### GET request for a specific Formulation by ID and Date of creation
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    </code>
+  </pre>
+</div>
+
+### PUT to update a specific formulation
+## PUT <div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    http://localhost:8080/api/feed-formulation/{ID}/{DATE}
+    </code>
+  </pre>
+</div>
+
+### Request
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+    {
+    "formulationName": "",
+    "quantity":,
+    "targetCpValue":
+    }
+    </code>
+  </pre>
+</div>
+
+### Response
+<div>
+  <button onclick="copyToClipboard()"></button>
+  <pre id="codeBlock">
+    <code>
+   {
+    "formulationId": "",
+    "formulationName": "",
+    "date": "",
+    "quantity": ,
+    "targetCpValue": ,
+    "ingredients": [
+        {
+            "name": "Soya beans",
+            "crudeProtein": 44.0,
+            "quantity": 
+        },
+        {
+            "name": "Groundnuts",
+            "crudeProtein": 45.0,
+            "quantity": 
+        },
+        {
+            "name": "Blood Meal",
+            "crudeProtein": 80.0,
+            "quantity": 
+        },
+        {
+            "name": "Fish Meal",
+            "crudeProtein": 65.0,
+            "quantity": 
+        },
+        {
+            "name": "Maize",
+            "crudeProtein": 9.0,
+            "quantity":
+        },
+        {
+            "name": "Cassava",
+            "crudeProtein": 2.0,
+            "quantity": 
+        },
+        {
+            "name": "Diphosphate Calcium",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Bone Meal",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Marine Shell Flour",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Salt",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Vitamin C",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Premix",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Palm Oil",
+            "crudeProtein": 0.0,
+            "quantity": 
+        },
+        {
+            "name": "Anti-toxin",
+            "crudeProtein": 0.0,
+            "quantity": 
+        }
+    ]
+}
+    </code>
+  </pre>
+</div>
