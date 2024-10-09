@@ -73,7 +73,8 @@ public class FeedFormulationSupport {
                 Ingredient.builder().name("Premix").crudeProtein(Constants.CRUDE_00_VALUE)
                         .quantity(quantity * Constants.CALC_001_VALUE).build(),
                 Ingredient.builder().name("Palm Oil").crudeProtein(Constants.CRUDE_00_VALUE)
-                        .quantity(quantity * Constants.CALC_002_VALUE).build(),
+                        // Convert the palm oil quantity from kg to liters (assuming 1 liter = 0.9 kg)
+                        .quantity((quantity * Constants.CALC_002_VALUE) / 0.9).build(),  // Conversion applied here
                 Ingredient.builder().name("Anti-toxin").crudeProtein(Constants.CRUDE_00_VALUE)
                         .quantity(quantity * Constants.CALC_00005_VALUE).build()
         );

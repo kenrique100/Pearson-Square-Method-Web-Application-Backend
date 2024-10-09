@@ -2,7 +2,6 @@ package com.feedformulation;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 /**
  * The main application class for the Feed Formulation Spring Boot application.
  * This class serves as the entry point and initializes the Spring context.

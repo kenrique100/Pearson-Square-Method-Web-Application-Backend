@@ -1,8 +1,10 @@
 package com.feedformulation.model;
+
 import jakarta.persistence.*; // Importing JPA annotations for entity management
 import lombok.AllArgsConstructor; // Importing Lombok annotation for generating all-args constructor
 import lombok.Builder; // Importing Lombok annotation for builder pattern
 import lombok.Data; // Importing Lombok annotation for generating getters, setters, and toString
+import lombok.NoArgsConstructor; // Importing Lombok annotation for generating no-args constructor
 
 import java.util.ArrayList; // Importing ArrayList for initializing ingredient list
 import java.util.List; // Importing List interface for managing collections of ingredients
@@ -15,6 +17,7 @@ import java.util.List; // Importing List interface for managing collections of i
 @Entity // Indicates that this class is a JPA entity
 @Builder // Enables the builder pattern for creating instances of this class
 @AllArgsConstructor // Generates a constructor with all fields as parameters
+@NoArgsConstructor // Generates a no-args constructor, required by JPA
 public class FeedResponse {
 
     /**
@@ -48,6 +51,11 @@ public class FeedResponse {
      * Target crude protein (CP) value of the feed formulation.
      */
     private double targetCpValue;
+
+    /**
+     * Total crude protein (CP) value of the feed formulation.
+     */
+    private double totalCrudeProtein; // Add this line if needed
 
     /**
      * List of ingredients used in the feed formulation.

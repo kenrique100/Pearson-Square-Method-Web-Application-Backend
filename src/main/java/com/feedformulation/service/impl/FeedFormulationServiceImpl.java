@@ -31,6 +31,7 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
     private final FeedFormulationRepository repository;  // Repository for interacting with the database
     private final FeedFormulationSupport support;        // Utility class for supporting formulation calculations
 
+    
     /**
      * Creates a new feed formulation based on the request data.
      *
@@ -171,4 +172,23 @@ public class FeedFormulationServiceImpl implements FeedFormulationService {
         // Delete the found formulation
         repository.delete(response); // Perform deletion
     }
+    private double calculateFeed(List<Ingredient> ingredients, double targetCpValue, double totalQuantity) {
+        double totalCrudeProtein = 0.0;
+
+        for (Ingredient ingredient : ingredients) {
+            // Pearson square calculation based on CP value and quantity
+            double ingredientCrudeProtein = ingredient.getCrudeProtein();
+            double ingredientQuantity = ingredient.getQuantity();
+
+            // Adjust the quantities based on Pearson Square method
+            double adjustedQuantity = ((targetCpValue - ingredientCrudeProtein) / (targetCpValue)) * totalQuantity;
+
+            // Update ingredient's quantity and sum crude protein
+            ingredient.setQuantity(adjustedQuantity);
+            totalCrudeProtein += ingredientCrudeProtein * adjustedQuantity;
+        }
+
+        return totalCrudeProtein;
+    }
+
 }
