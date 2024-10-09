@@ -157,7 +157,6 @@ The purpose of this project is to develop a feed composition calculator using th
     http://localhost:8080/api/feed-formulation/{ID}/{DATE}
     </code>
   </pre>
-</div>
 
 ### Request
 <div>
@@ -269,7 +268,6 @@ The purpose of this project is to develop a feed composition calculator using th
     http://localhost:8080/api/feed-formulation/{ID}/{DATE}
     </code>
   </pre>
-</div>
 
 
 
@@ -433,7 +431,6 @@ The purpose of this project is to develop a feed composition calculator using th
     http://localhost:8080/api/feed-formulations/{ID}/{DATE}
     </code>
   </pre>
-</div>
 
 ### Request
 <div>
@@ -545,4 +542,3 @@ The purpose of this project is to develop a feed composition calculator using th
     http://localhost:8080/api/feed-formulations/{ID}/{DATE}
     </code>
   </pre>
-</div>
