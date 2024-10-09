@@ -1,4 +1,5 @@
 package com.feedformulation.model;
+
 import jakarta.persistence.*; // Importing JPA annotations for entity management
 import lombok.AllArgsConstructor; // Importing Lombok annotation for generating all-args constructor
 import lombok.Builder; // Importing Lombok annotation for builder pattern
@@ -48,6 +49,11 @@ public class FeedResponse {
      * Target crude protein (CP) value of the feed formulation.
      */
     private double targetCpValue;
+
+    /**
+     * Total crude protein value of the feed formulation.
+     */
+    private double totalCrudeProtein; // New field added
 
     /**
      * List of ingredients used in the feed formulation.
