@@ -135,9 +135,10 @@ public class FeedFormulationSupport2 {
             case "fish meal" -> Constants.CRUDE_FISH_VALUE;
             case "maize" -> Constants.CRUDE_MAIZE_VALUE;
             case "cassava" -> Constants.CRUDE_CAS_VALUE;
-            default -> Constants.CRUDE_00_VALUE;
+            default -> throw new IllegalArgumentException();
         };
     }
+
 
     /**
      * Rounds a given value to one decimal place.
